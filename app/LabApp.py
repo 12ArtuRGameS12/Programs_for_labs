@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from Labs import lib_lab_0_2 as lb
+import lib_lab_0_2 as lb
 
 
 def clear(a):
@@ -34,7 +34,7 @@ class MyApp(App):
 		sc = {i: Screen(name=f"{i}") for i in text}
 		for i in text: self.sm.add_widget(sc[i])
 
-		bl = {i: BoxLayout(orientation="vertical") for i in text}
+		bl = {i: BoxLayout(orientation="vertical", padding=(20, 20)) for i in text}
 		for i in text: sc[i].add_widget(bl[i])
 
 		for i in text[1:]: bl[i].add_widget(Button(text="Home", on_press=self.select))
@@ -43,10 +43,10 @@ class MyApp(App):
 		for i in bu0: bl[text[0]].add_widget(bu0[i])
 
 		self.st1 = (
-			TextInput(hint_text="Данные"),
+			TextInput(hint_text="Данные: 1.3 2.5 4.74 или 1.3, 2.5, 4.74"),
 			TextInput(hint_text="Точность прибора"),
 			TextInput(hint_text="1=90% 2=95% 3=99 По умолчанию: 2"),
-			Label(),
+			TextInput(hint_text="Результат", readonly=True),
 			Button(text="calc", on_press=self.calc1)
 		)
 		for i in self.st1: bl[text[1]].add_widget(i)
@@ -54,7 +54,7 @@ class MyApp(App):
 		self.st2 = (
 			TextInput(hint_text="x"),
 			TextInput(hint_text="y"),
-			Label(),
+			TextInput(hint_text="Результат", readonly=True),
 			Button(text="calc", on_press=self.calc2)
 		)
 		for i in self.st2: bl[text[2]].add_widget(i)
@@ -62,7 +62,7 @@ class MyApp(App):
 		self.st3 = (
 			TextInput(hint_text="Среднее значения"),
 			TextInput(hint_text="Погрешность значений"),
-			Label(),
+			TextInput(hint_text="Результат", readonly=True),
 			Button(text="calc", on_press=self.calc3)
 		)
 		for i in self.st3: bl[text[3]].add_widget(i)
@@ -77,7 +77,7 @@ class MyApp(App):
 		try:
 			x = clear(self.st1[0].text)
 			y = float(self.st1[1].text)
-			z = float(self.st1[2].text) if len(self.st1[2].text) != 0 else 2
+			z = int(self.st1[2].text) if len(self.st1[2].text) != 0 else 2
 			x1 = lb.prim_izmer(x, y, z)
 			x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
 			self.st1[-2].text = x2
@@ -86,8 +86,13 @@ class MyApp(App):
 
 	def calc2(self, *args, **kwargs):
 		try:
+			if self.st2[0].text == self.st2[1].text == "": raise Exception("")
 			x = clear(self.st2[0].text)
 			y = clear(self.st2[1].text)
+
+			l = len(x), len(y)
+			if l[0] != l[1]: raise Exception(f"Количество не равно x:{l[0]} y:{l[1]}")
+			if (l[0] < 3) or (l[1] < 3): raise Exception(f"Количество x или y меньше 3 {l}")
 
 			x1 = lb.naimcv(x, y)
 			x2 = f"y=ax+b\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}\nb = {x1[2][0]}\ndb = {x1[2][1]}"
@@ -97,8 +102,12 @@ class MyApp(App):
 
 	def calc3(self, *args, **kwargs):
 		try:
+			if self.st3[0].text == self.st3[1].text == "": raise Exception("")
 			x = clear(self.st3[0].text)
 			y = clear(self.st3[1].text)
+
+			l = len(x), len(y)
+			if l[0] != l[1]: raise Exception(f"Количество не равно x:{l[0]} y:{l[1]}")
 
 			x1 = lb.nerav_izmer(x, y)
 			x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
