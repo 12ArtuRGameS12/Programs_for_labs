@@ -70,15 +70,19 @@ def stu(n: int, a: int = 2) -> float:
 	return x
 
 
-# переворачивает таблицу на бок
-def rotate(a):
-	if type(a) is list:
-		x = [i for i in a]
-		y = [list(i) for i in zip(*x)]
+def rotate(tabel: tuple | list) -> tuple | list:
+	"""
+	Переворачивает таблицу на бок
+	"""
+	type_input = type(tabel)
+	if type_input not in (tuple, list):
+		raise TypeError(f"{type_input} не tuple или list")
+
+	if type_input is list:
+		x = [list(i) for i in zip(*tabel)]
 	else:
-		x = tuple([i for i in a])
-		y = tuple([i for i in zip(*x)])
-	return x, y
+		x = tuple([i for i in zip(*tabel)])
+	return x
 
 
 # список результатов функции
@@ -115,8 +119,8 @@ def read_tabel(a):
 	with open(a, encoding='utf-8') as file:
 		tabel = [row.strip() for row in file]
 
-	x = [[i.split(",") for i in clr(tabel[0]).split()]]
-	y = [clr(i).split() for i in tabel[1:]]
+	x = [[i.split(",") for i in clr_sp(tabel[0]).split()]]
+	y = [clr_sp(i).split() for i in tabel[1:]]
 
 	y0 = rotate(y)[1]
 	z1 = -1
@@ -177,7 +181,7 @@ def make_tabel(a):
 		if z == "end":
 			break
 		x1 += z + " "
-	x1 = clr(x1).split()
+	x1 = clr_sp(x1).split()
 
 	print("-" * 30)
 	x2 = []

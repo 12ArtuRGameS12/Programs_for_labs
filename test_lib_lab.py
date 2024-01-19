@@ -21,3 +21,10 @@ class Testtest_lib_lab(unittest.TestCase):
 		with self.assertRaises(ValueError) as err:
 			stu(9998, 3)
 		self.assertEqual(err.exception.args[0], "Нету в таблице такой степени свободы как 9998")
+
+	def test_rotate(self):
+		self.assertEqual(rotate([[1, 2, 3, 4], [5, 6, 7, 8]]), [[1, 5], [2, 6], [3, 7], [4, 8]])
+		self.assertEqual(rotate(((1, 2, 3, 4), (5, 6, 7, 8))), ((1, 5), (2, 6), (3, 7), (4, 8)))
+		with self.assertRaises(TypeError) as err:
+			rotate(1234)
+		self.assertEqual(err.exception.args[0], "<class 'int'> не tuple или list")
