@@ -1,3 +1,7 @@
+# from typing import Any
+# from collections.abc import Callable
+
+
 def clr_sp(text: str) -> str:
 	"""
 	Чистит водимую строку от лишних пробелов,
@@ -85,13 +89,22 @@ def rotate(tabel: tuple | list) -> tuple | list:
 	return x
 
 
-# список результатов функции
-# a - функция; b - списки переменных
-def modify(a, *b):
-	x = []
-	for i in zip(*b):
-		x.append(a(*i))
-	return x
+# Статистика для методов наим. кв.
+# a-x b-y c-имя переменной
+def stat(a, b=None, c="x"):
+	stt = {f"n{c}": len(a), f"sum{c}": sum(a)}
+	stt[f"sr{c}"] = stt[f"sum{c}"] / len(a)
+	stt[f"sum{c}{c}"] = sum(map(lambda x: x - stt[f"sr{c}"], a))
+	stt[f"sum{c}{c}2"] = sum(map(lambda x: (x - stt[f"sr{c}"]) ** 2, a))
+	stt[f"s0{c}"] = (stt[f"sum{c}{c}2"]/(stt[f"n{c}"] * (stt[f"n{c}"]-1))) ** (1/2)
+	stt[f"sum{c}2"] = (sum(map(lambda x: x ** 2, a)))
+	if b is None:
+		return stt
+	else:
+		stt.update(stat(b, c="y"))
+		stt["sumxy"] = sum(map(lambda x, y: x * y, a, b))
+		stt[f"sumxxyy"] = sum(map(lambda x, y: (x - stt["srx"]) * (y - stt["sry"]), a, b))
+		return stt
 
 
 # конвертируют строковые значения в числовые в таблице
@@ -209,24 +222,6 @@ def make_tabel(a):
 	tabel_to_file(x, a)
 
 
-# Статистика для методов наим. кв.
-# a-x b-y c-имя переменной
-def stat(a, b=None, c="x"):
-	stt = {f"n{c}": len(a), f"sum{c}": sum(a)}
-	stt[f"sr{c}"] = stt[f"sum{c}"] / len(a)
-	stt[f"sum{c}{c}"] = sum(modify(lambda x: x-stt[f"sr{c}"], a))
-	stt[f"sum{c}{c}2"] = sum(modify(lambda x: (x-stt[f"sr{c}"])**2, a))
-	stt[f"s0{c}"] = (stt[f"sum{c}{c}2"]/(stt[f"n{c}"] * (stt[f"n{c}"]-1))) ** (1/2)
-	stt[f"sum{c}2"] = (sum(modify(lambda x: x**2, a)))
-	if b is None:
-		return stt
-	else:
-		stt.update(stat(b, c="y"))
-		stt["sumxy"] = sum(modify(lambda x, y: x*y, a, b))
-		stt[f"sumxxyy"] = sum(modify(lambda x, y: (x-stt["srx"])*(y-stt["sry"]),a, b))
-		return stt
-
-
 def _fa3(a, c, b=2):
 	izmer = {}
 	x = stat(a)
@@ -323,7 +318,7 @@ def edit_step(a, b):
 	x0 = a[0]
 	x1 = rotate(a[1:])[1]
 	for i, q, t in zip(x1, b, range(len(x1))):
-		x1[t] = modify(q, i)
+		x1[t] = list(map(q, i))
 	x = [x0, *rotate(x1)[1]]
 	return x
 
@@ -360,8 +355,8 @@ def cosn_izmer(formul, tabel):
 # неравноточные измерения
 # a-значения, b-погрешности
 def nerav_izmer(a, b):
-	w = modify(lambda x: 1/x**2, b)
-	x0 = modify(lambda x, y: x*y, w, a)
+	w = list(map(lambda x: 1 / x ** 2, b))
+	x0 = list(map(lambda x, y: x * y, w, a))
 	x = sum(x0)/sum(w)
 	y = (len(a)/sum(w))**(1/2)
 	return x, y
@@ -372,7 +367,7 @@ def naimcv(a, b):
 	a0 = (x["nx"] * x["sumxy"] - x["sumx"] * x["sumy"]) / (x["nx"] * x["sumx2"] - x["sumx"] ** 2)
 	b0 = (x["sumx2"] * x["sumy"] - x["sumx"] * x["sumxy"]) / (x["nx"] * x["sumx2"] - x["sumx"] ** 2)
 	r0 = (x["sumxxyy"]) / ((x["sumxx2"] ** (1 / 2)) * (x["sumyy2"] ** (1 / 2)))
-	Q = sum(modify(lambda x, y: (a0 * x + b0 - y) ** 2, a, b))
+	Q = sum(map(lambda x, y: (a0 * x + b0 - y) ** 2, a, b))
 	sa = (Q / ((x["nx"] - 2) * x["sumxx2"])) ** (1 / 2)
 	sb = (Q / x["nx"] / (x["nx"] - 2) + x["srx"] ** 2 * sa) ** (1 / 2)
 	da = stu(x["nx"] - 2) * sa
