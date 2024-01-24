@@ -68,7 +68,7 @@ def stu(n: int, a: int = 2) -> float:
 		9999: (1.645, 1.96, 2.576)
 	}
 	try:
-		x = T[n][a-1]
+		x = T[n][a - 1]
 	except KeyError:
 		raise ValueError(f"Нету в таблице такой степени свободы как {n}")
 	return x
@@ -89,21 +89,74 @@ def rotate(tabel: tuple | list) -> tuple | list:
 	return x
 
 
-# Статистика для методов наим. кв.
-# a-x b-y c-имя переменной
-def stat(a, b=None, c="x"):
-	stt = {f"n{c}": len(a), f"sum{c}": sum(a)}
-	stt[f"sr{c}"] = stt[f"sum{c}"] / len(a)
-	stt[f"sum{c}{c}"] = sum(map(lambda x: x - stt[f"sr{c}"], a))
-	stt[f"sum{c}{c}2"] = sum(map(lambda x: (x - stt[f"sr{c}"]) ** 2, a))
-	stt[f"s0{c}"] = (stt[f"sum{c}{c}2"]/(stt[f"n{c}"] * (stt[f"n{c}"]-1))) ** (1/2)
-	stt[f"sum{c}2"] = (sum(map(lambda x: x ** 2, a)))
-	if b is None:
-		return stt
+def stat(arg1: tuple | list, arg2: tuple | list = None) -> dict[
+	str, int | float]:
+	"""
+	Статистика значений
+
+	nX = количество элементов \n
+
+	sumX = сумма X \n
+	srX = sumX / nX \n
+
+	XX = Xi - srX \n
+	sumXX = сумма (Xi - srX) \n
+
+	XX2 = (Xi - srX) ** 2 \n
+	sumXX2 = сумма (Xi - srX) ** 2 \n
+
+	s0x = (sumXX2 / {nX * [nX - 1]}) ** (1/2) \n
+
+	X2 = Xi ** 2 \n
+	sumX2 = сумма Xi ** 2 \n
+
+	XY = Xi * Yi \n
+	sumXY = сумма Xi * Yi \n
+
+	XXYY = (Xi - srX) * (Yi - srY) \n
+	sumXXYY = сумма (Xi - srX) * (Yi - srY) \n
+
+	:param arg1: список первой переменной
+	:param arg2: список второй переменной
+	:return: словарь данных
+	"""
+
+	type_arg1, type_arg2 = type(arg1), type(arg2)
+	if type_arg1 not in (tuple, list):
+		raise TypeError(f"arg1 {type_arg1} не tuple или list")
+	if len(arg1) <= 1:
+		raise ValueError("Меньше двух нельзя")
+
+	def _stat1(arg: tuple | list, name: str) -> dict[str, int | float | list]:
+
+		stt1: dict[str, int | float | list] = dict()
+		stt1[f"n{name}"] = len(arg)
+		stt1[f"sum{name}"] = sum(arg)
+		stt1[f"sr{name}"] = stt1[f"sum{name}"] / stt1[f"n{name}"]
+		stt1[f"{name}{name}"] = list(map(lambda x: x - stt1[f"sr{name}"], arg), )
+		stt1[f"sum{name}{name}"] = sum(stt1[f"{name}{name}"])
+		stt1[f"{name}{name}2"] = list(map(lambda x: (x - stt1[f"sr{name}"]) ** 2, arg), )
+		stt1[f"sum{name}{name}2"] = sum(stt1[f"{name}{name}2"])
+		stt1[f"s0{name}"] = \
+			(stt1[f"sum{name}{name}2"] / (stt1[f"n{name}"] * (stt1[f"n{name}"] - 1))) ** (1 / 2)
+		stt1[f"{name}2"] = list(map(lambda x: x ** 2, arg))
+		stt1[f"sum{name}2"] = sum(stt1[f"{name}2"])
+		return stt1
+
+	if not arg2:
+		return _stat1(arg1, "X")
 	else:
-		stt.update(stat(b, c="y"))
-		stt["sumxy"] = sum(map(lambda x, y: x * y, a, b))
-		stt[f"sumxxyy"] = sum(map(lambda x, y: (x - stt["srx"]) * (y - stt["sry"]), a, b))
+
+		if type_arg2 not in (tuple, list):
+			raise TypeError(f"arg2 {type_arg2} не tuple или list")
+		if len(arg2) <= 1:
+			raise ValueError("Меньше двух нельзя")
+
+		stt = _stat1(arg1, "X") | _stat1(arg2, "Y")
+		stt["XY"] = list(map(lambda x, y: x * y, arg1, arg2))
+		stt["sumXY"] = sum(stt["XY"])
+		stt["XXYY"] = list(map(lambda x, y: x * y, stt["XX"], stt["YY"]))
+		stt["sumXXYY"] = sum(stt["XXYY"])
 		return stt
 
 
@@ -143,7 +196,7 @@ def read_tabel(a):
 		for q in i:
 			z2 += 1
 			if q == "None":
-				y0[z1][z2] = y0[z1][z2-1]
+				y0[z1][z2] = y0[z1][z2 - 1]
 
 	y = rotate(y0)[1]
 	x.extend(y)
@@ -225,9 +278,9 @@ def make_tabel(a):
 def _fa3(a, c, b=2):
 	izmer = {}
 	x = stat(a)
-	izmer["slp"] = stu(x["nx"]-1, b) * x["s0x"]
+	izmer["slp"] = stu(x["nx"] - 1, b) * x["s0x"]
 	izmer["prp"] = stu(9999, b) * c / 3
-	izmer["obp"] = (izmer["slp"] ** 2 + izmer["prp"] ** 2) ** (1/2)
+	izmer["obp"] = (izmer["slp"] ** 2 + izmer["prp"] ** 2) ** (1 / 2)
 	izmer["srstat"] = x["srx"]
 	return izmer
 
@@ -235,7 +288,6 @@ def _fa3(a, c, b=2):
 # прямые измерения
 # a - данные, с - точность прибора, b - доверительный интервал
 def prim_izmer(a, c, b=2):
-
 	x = _fa3(a, c, b)
 	return x["srstat"], x["obp"]
 
@@ -301,6 +353,7 @@ def _fa2(a):
 	def fx(x):
 		h = x * 10 ** a
 		return h
+
 	return fx
 
 
@@ -332,7 +385,7 @@ def cosn_izmer(formul, tabel):
 	delta_cosn_izmer = sympy.sympify(0)
 	for i, q in zip(symb[::2], symb[1::2]):
 		q = sympy.symbols(q)
-		x = sympy.diff(formul, i)**2 * q**2
+		x = sympy.diff(formul, i) ** 2 * q ** 2
 		delta_cosn_izmer += x
 	delta_cosn_izmer = sympy.sqrt(delta_cosn_izmer)
 
@@ -357,8 +410,8 @@ def cosn_izmer(formul, tabel):
 def nerav_izmer(a, b):
 	w = list(map(lambda x: 1 / x ** 2, b))
 	x0 = list(map(lambda x, y: x * y, w, a))
-	x = sum(x0)/sum(w)
-	y = (len(a)/sum(w))**(1/2)
+	x = sum(x0) / sum(w)
+	y = (len(a) / sum(w)) ** (1 / 2)
 	return x, y
 
 
@@ -405,7 +458,7 @@ def pp(a, b=False):
 	a = a if not b else rotate(a)[1]
 	for i in a:
 		print(i)
-	print("-"*30)
+	print("-" * 30)
 
 
 def minmax(a, *b):
