@@ -87,3 +87,27 @@ class Testtest_lib_lab(TestCase):
 			stat((1,))
 		self.assertEqual(err.exception.args[0], "Меньше двух нельзя")
 
+	def test_prim_izmer(self):
+		self.assertEqual(prim_izmer((1, 2, 3), 0.5, 1), (2.0, 1.7080107418996064))
+		self.assertEqual(prim_izmer((1, 2, 3), 0.5), (2.0, 2.5057229384839106))
+		self.assertEqual(prim_izmer((1, 2, 3), 0.5, 1, True), {
+			'obp': 1.7080107418996064, 'prp': 0.27416666666666667, 'slp': 1.685862786033707})
+
+		with self.assertRaises(TypeError) as err:
+			prim_izmer((1, 2, 3), 0.5, 1, 1234)
+		self.assertEqual(err.exception.args[0], "debug <class 'int'> не bool")
+
+		with self.assertRaises(TypeError) as err:
+			prim_izmer(1234, 0.5)
+		self.assertEqual(err.exception.args[0], "data <class 'int'> не tuple или list")
+
+		with self.assertRaises(TypeError) as err:
+			prim_izmer((1, 2, 3), "1234")
+		self.assertEqual(err.exception.args[0], "accuracy <class 'str'> не int или float")
+
+	# def test_(self):
+	# 	self.assertEqual()
+	#
+	# 	with self.assertRaises() as err:
+	#
+	# 	self.assertEqual(err.exception.args[0], "")

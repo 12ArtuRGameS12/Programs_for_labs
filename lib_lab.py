@@ -105,7 +105,7 @@ def stat(arg1: tuple | list, arg2: tuple | list = None) -> dict[
 	XX2 = (Xi - srX) ** 2 \n
 	sumXX2 = сумма (Xi - srX) ** 2 \n
 
-	s0x = (sumXX2 / {nX * [nX - 1]}) ** (1/2) \n
+	s0X = (sumXX2 / {nX * [nX - 1]}) ** (1/2) \n
 
 	X2 = Xi ** 2 \n
 	sumX2 = сумма Xi ** 2 \n
@@ -158,6 +158,39 @@ def stat(arg1: tuple | list, arg2: tuple | list = None) -> dict[
 		stt["XXYY"] = list(map(lambda x, y: x * y, stt["XX"], stt["YY"]))
 		stt["sumXXYY"] = sum(stt["XXYY"])
 		return stt
+
+
+def prim_izmer(data: tuple | list, accuracy: int | float, interval: int = 2, debug: bool = False) \
+		-> tuple[float, float] | dict[str, float]:
+	"""
+	Прямые измерения
+
+	slp - случайная погрешность\n
+	prp - приборная погрешность\n
+	obp - абсолютная погрешность\n
+	:param debug:
+	:param data: данные
+	:param accuracy: точность прибора
+	:param interval: доверительный интервал
+	:return: средние значение и абсолютная погрешность
+	"""
+	type_data, type_accuracy, type_debug = type(data), type(accuracy), type(debug)
+	if type_data not in (tuple, list):
+		raise TypeError(f"data {type_data} не tuple или list")
+	if type_accuracy not in (int, float):
+		raise TypeError(f"accuracy {type_accuracy} не int или float")
+	if type_debug is not bool:
+		raise TypeError(f"debug {type_debug} не bool")
+
+	izmer: dict[str, int | float] = dict()
+	x = stat(data)
+	izmer["slp"] = stu(x["nX"] - 1, interval) * x["s0X"]
+	izmer["prp"] = stu(9999, interval) * accuracy / 3
+	izmer["obp"] = (izmer["slp"] ** 2 + izmer["prp"] ** 2) ** (1 / 2)
+	if debug:
+		return izmer
+	else:
+		return x["srX"], izmer["obp"]
 
 
 # конвертируют строковые значения в числовые в таблице
@@ -273,23 +306,6 @@ def make_tabel(a):
 	x[0] = [i.split(",") for i in x[0]]
 
 	tabel_to_file(x, a)
-
-
-def _fa3(a, c, b=2):
-	izmer = {}
-	x = stat(a)
-	izmer["slp"] = stu(x["nx"] - 1, b) * x["s0x"]
-	izmer["prp"] = stu(9999, b) * c / 3
-	izmer["obp"] = (izmer["slp"] ** 2 + izmer["prp"] ** 2) ** (1 / 2)
-	izmer["srstat"] = x["srx"]
-	return izmer
-
-
-# прямые измерения
-# a - данные, с - точность прибора, b - доверительный интервал
-def prim_izmer(a, c, b=2):
-	x = _fa3(a, c, b)
-	return x["srstat"], x["obp"]
 
 
 def _fa1(a):
