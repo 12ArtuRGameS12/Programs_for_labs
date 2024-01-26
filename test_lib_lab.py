@@ -105,9 +105,14 @@ class Testtest_lib_lab(TestCase):
 			prim_izmer((1, 2, 3), "1234")
 		self.assertEqual(err.exception.args[0], "accuracy <class 'str'> не int или float")
 
-	# def test_(self):
-	# 	self.assertEqual()
-	#
-	# 	with self.assertRaises() as err:
-	#
-	# 	self.assertEqual(err.exception.args[0], "")
+	def test_nerav_izmer(self):
+		self.assertEqual(nerav_izmer(
+			[1, 2, 3], [0.4, 0.5, 0.6]), (1.7334754797441363, 0.479872051177255))
+
+		with self.assertRaises(TypeError) as err:
+			nerav_izmer([1, 2, "3"], [0.4, 0.5, 0.6])
+		self.assertEqual(err.exception.args[0], "2 - <class 'str'> не (<class 'int'>, <class 'float'>)")
+		with self.assertRaises(TypeError) as err:
+			nerav_izmer(1234, [0.4, 0.5, 0.6])
+		self.assertEqual(err.exception.args[0], "data - <class 'int'> не (<class 'tuple'>, <class 'list'>)")
+

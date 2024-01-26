@@ -193,6 +193,55 @@ def prim_izmer(data: tuple | list, accuracy: int | float, interval: int = 2, deb
 		return x["srX"], izmer["obp"]
 
 
+def typetest(input_data: tuple | list, include: tuple | list, name: dict[int, ...] = None) -> bool:
+	"""
+	Функция для проверки типа и вызова исключения
+	:param input_data: в виде списка значения
+	:param include: с какими типами сравнивать
+	:param name: имена переменных для ошибок
+	:return:
+	"""
+	if name is None:
+		name = {i: i for i in range(len(input_data))}
+	else:
+		name = {i: i for i in range(len(input_data))} | name
+	for i, q in zip(input_data, name):
+		i_type = type(i)
+		if i_type not in include:
+			raise TypeError(f"{name[q]} - {i_type} не {include}")
+	return True
+
+
+def nerav_izmer(
+		data: tuple[int | float, ...] | list[int | float],
+		errors: tuple[int | float, ...] | list[int | float],
+		debug: bool = False) -> tuple[float, float] | dict[str, int | float | list]:
+	"""
+	Неравноточные измерения
+
+	:param debug:
+	:param data: значения
+	:param errors: погрешности
+	"""
+	if typetest((data, errors), (tuple, list), {0: "data", 1: "errors"}):
+		for i in (data, errors):
+			typetest(i, (int, float))
+	typetest((debug,), (bool,))
+
+	izmer: dict[str, int | float | list] = dict()
+	izmer["w"] = list(map(lambda x: 1 / x ** 2, errors))
+	izmer["x0"] = list(map(lambda x, y: x * y, izmer["w"], data))
+	izmer["sum_x0"] = sum(izmer["x0"])
+	izmer["sum_w"] = sum(izmer["w"])
+	izmer["value"] = izmer["sum_x0"] / izmer["sum_w"]
+	izmer["data_len"] = len(data)
+	izmer["err"] = (izmer["data_len"] / izmer["sum_w"]) ** (1 / 2)
+	if debug:
+		return izmer
+	else:
+		return izmer["value"], izmer["err"]
+
+
 # конвертируют строковые значения в числовые в таблице
 def convert(a):
 	x = a[0]
@@ -419,16 +468,6 @@ def cosn_izmer(formul, tabel):
 			z0 = z0.subs(i[0], q)
 		w1.append(z0)
 	return w0, w1
-
-
-# неравноточные измерения
-# a-значения, b-погрешности
-def nerav_izmer(a, b):
-	w = list(map(lambda x: 1 / x ** 2, b))
-	x0 = list(map(lambda x, y: x * y, w, a))
-	x = sum(x0) / sum(w)
-	y = (len(a) / sum(w)) ** (1 / 2)
-	return x, y
 
 
 def naimcv(a, b):
