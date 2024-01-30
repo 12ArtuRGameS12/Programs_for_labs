@@ -8,26 +8,22 @@ class Testtest_lib_lab(TestCase):
 		self.assertEqual(clr_sp("    123,25  125 6,47 "), "123,25 125 6,47")
 		self.assertEqual(clr_sp("124, 1246  ,  46 "), "124,1246,46")
 		self.assertEqual(clr_sp("1.24, 12.46  ,  46 "), "1.24,12.46,46")
-		with self.assertRaises(TypeError):
-			clr_sp(1234)
+
+		self.assertRaisesRegex(TypeError, "text - int не str", clr_sp, 1234)
 
 	def test_stu(self):
 		self.assertEqual(stu(4), 2.776)
 		self.assertEqual(stu(4, 2), 2.776)
 		self.assertEqual(stu(4, 3), 4.604)
-		with self.assertRaises(ValueError) as err:
-			stu(9999, 4)
-		self.assertEqual(err.exception.args[0], "Нету в таблице такой доверительной вероятности как 4")
-		with self.assertRaises(ValueError) as err:
-			stu(9998, 3)
-		self.assertEqual(err.exception.args[0], "Нету в таблице такой степени свободы как 9998")
+
+		self.assertRaisesRegex(ValueError, "Нету в таблице такой доверительной вероятности как 4", stu, 9999, 4)
+		self.assertRaisesRegex(ValueError, "Нету в таблице такой степени свободы как 9998", stu, 9998, 3)
+		self.assertRaisesRegex(TypeError, "n - str не int", stu, "1234")
 
 	def test_rotate(self):
 		self.assertEqual(rotate([[1, 2, 3, 4], [5, 6, 7, 8]]), [[1, 5], [2, 6], [3, 7], [4, 8]])
 		self.assertEqual(rotate(((1, 2, 3, 4), (5, 6, 7, 8))), ((1, 5), (2, 6), (3, 7), (4, 8)))
-		with self.assertRaises(TypeError) as err:
-			rotate(1234)
-		self.assertEqual(err.exception.args[0], "<class 'int'> не tuple или list")
+		self.assertRaisesRegex(TypeError, "tabel - int не tuple или list", rotate, 1234)
 
 	def test_stat(self):
 		self.assertEqual(stat([1, 2, 3], [3, 4, 5]), {
@@ -71,21 +67,11 @@ class Testtest_lib_lab(TestCase):
 			'sumXX2': 2.0,
 		})
 
-		with self.assertRaises(TypeError) as err:
-			stat(1234)
-		self.assertEqual(err.exception.args[0], "arg1 <class 'int'> не tuple или list")
-
-		with self.assertRaises(TypeError) as err:
-			stat((1, 2, 3), 1234)
-		self.assertEqual(err.exception.args[0], "arg2 <class 'int'> не tuple или list")
-
-		with self.assertRaises(ValueError) as err:
-			stat(tuple())
-		self.assertEqual(err.exception.args[0], "Меньше двух нельзя")
-
-		with self.assertRaises(ValueError) as err:
-			stat((1,))
-		self.assertEqual(err.exception.args[0], "Меньше двух нельзя")
+		self.assertRaisesRegex(TypeError, "arg1 - int не tuple или list", stat, 1234)
+		self.assertRaisesRegex(TypeError, "arg2 - int не tuple или list", stat, (1, 2, 3), 1234)
+		self.assertRaisesRegex(TypeError, "2 - str не int или float", stat, (1, 2, "3"), 1234)
+		self.assertRaisesRegex(ValueError, "Меньше двух нельзя", stat, tuple())
+		self.assertRaisesRegex(ValueError, "Меньше двух нельзя", stat, (1,))
 
 	def test_prim_izmer(self):
 		self.assertEqual(prim_izmer((1, 2, 3), 0.5, 1), (2.0, 1.7080107418996064))
@@ -93,26 +79,15 @@ class Testtest_lib_lab(TestCase):
 		self.assertEqual(prim_izmer((1, 2, 3), 0.5, 1, True), {
 			'obp': 1.7080107418996064, 'prp': 0.27416666666666667, 'slp': 1.685862786033707})
 
-		with self.assertRaises(TypeError) as err:
-			prim_izmer((1, 2, 3), 0.5, 1, 1234)
-		self.assertEqual(err.exception.args[0], "debug <class 'int'> не bool")
-
-		with self.assertRaises(TypeError) as err:
-			prim_izmer(1234, 0.5)
-		self.assertEqual(err.exception.args[0], "data <class 'int'> не tuple или list")
-
-		with self.assertRaises(TypeError) as err:
-			prim_izmer((1, 2, 3), "1234")
-		self.assertEqual(err.exception.args[0], "accuracy <class 'str'> не int или float")
+		self.assertRaisesRegex(TypeError, "data - int не tuple или list", prim_izmer, 1234, 0.5)
+		self.assertRaisesRegex(TypeError, "2 - str не int или float", prim_izmer, (1, 2, "3"), 0.5)
+		self.assertRaisesRegex(TypeError, "accuracy - str не int или float", prim_izmer, (1, 2, 3), "1234")
+		self.assertRaisesRegex(TypeError, "debug - int не bool", prim_izmer, (1, 2, 3), 0.5, 1, 1234)
 
 	def test_nerav_izmer(self):
 		self.assertEqual(nerav_izmer(
 			[1, 2, 3], [0.4, 0.5, 0.6]), (1.7334754797441363, 0.479872051177255))
 
-		with self.assertRaises(TypeError) as err:
-			nerav_izmer([1, 2, "3"], [0.4, 0.5, 0.6])
-		self.assertEqual(err.exception.args[0], "2 - <class 'str'> не (<class 'int'>, <class 'float'>)")
-		with self.assertRaises(TypeError) as err:
-			nerav_izmer(1234, [0.4, 0.5, 0.6])
-		self.assertEqual(err.exception.args[0], "data - <class 'int'> не (<class 'tuple'>, <class 'list'>)")
-
+		self.assertRaisesRegex(TypeError, "data - str не tuple или list", nerav_izmer, "1234", [0.4, 0.5, 0.6])
+		self.assertRaisesRegex(TypeError, "2 - str не int или float", nerav_izmer, [1, 2, "3"], [0.4, 0.5, 0.6])
+		self.assertRaisesRegex(TypeError, "debug - str не bool", nerav_izmer, [1, 2, 3], [0.4, 0.5, 0.6], "1234")

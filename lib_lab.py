@@ -1,13 +1,47 @@
 # from typing import Any
-# from collections.abc import Callable
+
+
+def typetest(
+		input_data: tuple | list,
+		include: tuple[type, ...] | list[type],
+		name: dict[int, ...] = None) -> bool:
+	"""
+	Функция для проверки типа и вызова исключения
+
+	:param input_data: значения в виде списка
+	:param include: с какими типами сравнивать
+	:param name: имена переменных для ошибок
+	:return: True или исключение
+	"""
+
+	if name is None:
+		name = {i: i for i in range(len(input_data))}
+	else:
+		name = {i: i for i in range(len(input_data))} | name
+
+	for i, q in zip(input_data, name):
+		i_type = type(i)
+		if i_type not in include:
+
+			include_text = ""
+			include_len = len(include)
+			for j in enumerate(include):
+				if j[0] != include_len - 1:
+					include_text += str(j[1])[8:-2] + " или "
+				else:
+					include_text += str(j[1])[8:-2]
+			raise TypeError(f"{name[q]} - {str(i_type)[8:-2]} не {include_text}")
+
+	return True
 
 
 def clr_sp(text: str) -> str:
 	"""
 	Чистит водимую строку от лишних пробелов,
 	"""
-	if type(text) != str:
-		raise TypeError("Не str тип")
+
+	typetest((text,), (str,), {0: "text"})
+
 	while text.find("  ") != -1:
 		text = text.replace("  ", " ")
 	while text.find(" ,") != -1:
@@ -18,6 +52,7 @@ def clr_sp(text: str) -> str:
 		text = text[1:]
 	if text[-1] == " ":
 		text = text[:-1]
+
 	return text
 
 
@@ -29,8 +64,12 @@ def stu(n: int, a: int = 2) -> float:
 	:param a: доверительная вероятность(1=90%, 2=95%, 3=99%)
 	:return: значение Стьюдента
 	"""
+
+	typetest((n, a), (int, ), {0: "n", 1: "a"})
+
 	if a not in (1, 2, 3):
 		raise ValueError(f"Нету в таблице такой доверительной вероятности как {a}")
+
 	t = {
 		1: (6.314, 12.706, 63.619),
 		2: (2.92, 4.303, 9.925),
@@ -67,10 +106,12 @@ def stu(n: int, a: int = 2) -> float:
 		120: (1.658, 1.98, 2.617),
 		9999: (1.645, 1.96, 2.576)
 	}
+
 	try:
 		x = t[n][a - 1]
 	except KeyError:
 		raise ValueError(f"Нету в таблице такой степени свободы как {n}")
+
 	return x
 
 
@@ -78,19 +119,20 @@ def rotate(tabel: tuple | list) -> tuple | list:
 	"""
 	Переворачивает таблицу на бок
 	"""
-	type_input = type(tabel)
-	if type_input not in (tuple, list):
-		raise TypeError(f"{type_input} не tuple или list")
 
-	if type_input is list:
+	typetest((tabel, ), (tuple, list), {0: "tabel"})
+
+	if type(tabel) is list:
 		x = [list(i) for i in zip(*tabel)]
 	else:
 		x = tuple([i for i in zip(*tabel)])
+
 	return x
 
 
-def stat(arg1: tuple | list, arg2: tuple | list = None) -> dict[
-	str, int | float]:
+def stat(
+		arg1: tuple[int | float, ...] | list[int | float],
+		arg2: tuple[int | float, ...] | list[int | float] = None) -> dict[str, int | float]:
 	"""
 	Статистика значений
 
@@ -121,13 +163,18 @@ def stat(arg1: tuple | list, arg2: tuple | list = None) -> dict[
 	:return: словарь данных
 	"""
 
-	type_arg1, type_arg2 = type(arg1), type(arg2)
-	if type_arg1 not in (tuple, list):
-		raise TypeError(f"arg1 {type_arg1} не tuple или list")
+	typetest((arg1, ), (tuple, list), {0: "arg1"})
+	typetest(arg1, (int, float))
 	if len(arg1) <= 1:
 		raise ValueError("Меньше двух нельзя")
 
-	def _stat1(arg: tuple | list, name: str) -> dict[str, int | float | list]:
+	if arg2:
+		typetest((arg2, ), (tuple, list), {0: "arg2"})
+		typetest(arg2, (int, float))
+		if len(arg2) <= 1:
+			raise ValueError("Меньше двух нельзя")
+
+	def _stat1(arg: tuple[int | float, ...] | list[int | float], name: str) -> dict[str, int | float | list]:
 
 		stt1: dict[str, int | float | list] = dict()
 		stt1[f"n{name}"] = len(arg)
@@ -144,72 +191,52 @@ def stat(arg1: tuple | list, arg2: tuple | list = None) -> dict[
 		return stt1
 
 	if not arg2:
+
 		return _stat1(arg1, "X")
+
 	else:
-
-		if type_arg2 not in (tuple, list):
-			raise TypeError(f"arg2 {type_arg2} не tuple или list")
-		if len(arg2) <= 1:
-			raise ValueError("Меньше двух нельзя")
-
 		stt = _stat1(arg1, "X") | _stat1(arg2, "Y")
 		stt["XY"] = list(map(lambda x, y: x * y, arg1, arg2))
 		stt["sumXY"] = sum(stt["XY"])
 		stt["XXYY"] = list(map(lambda x, y: x * y, stt["XX"], stt["YY"]))
 		stt["sumXXYY"] = sum(stt["XXYY"])
+
 		return stt
 
 
-def prim_izmer(data: tuple | list, accuracy: int | float, interval: int = 2, debug: bool = False) \
-		-> tuple[float, float] | dict[str, float]:
+def prim_izmer(
+		data: tuple[int | float, ...] | list[int | float],
+		accuracy: int | float,
+		interval: int = 2, debug: bool = False) -> tuple[float, float] | dict[str, float]:
 	"""
 	Прямые измерения
 
 	slp - случайная погрешность\n
 	prp - приборная погрешность\n
 	obp - абсолютная погрешность\n
-	:param debug:
+
 	:param data: данные
 	:param accuracy: точность прибора
 	:param interval: доверительный интервал
+	:param debug: режим разработчика
 	:return: средние значение и абсолютная погрешность
 	"""
-	type_data, type_accuracy, type_debug = type(data), type(accuracy), type(debug)
-	if type_data not in (tuple, list):
-		raise TypeError(f"data {type_data} не tuple или list")
-	if type_accuracy not in (int, float):
-		raise TypeError(f"accuracy {type_accuracy} не int или float")
-	if type_debug is not bool:
-		raise TypeError(f"debug {type_debug} не bool")
+
+	typetest((data, ), (tuple, list), {0: "data"})
+	typetest(data, (int, float))
+	typetest((accuracy, ), (int, float), {0: "accuracy"})
+	typetest((debug, ), (bool, ), {0: "debug"})
 
 	izmer: dict[str, int | float] = dict()
 	x = stat(data)
 	izmer["slp"] = stu(x["nX"] - 1, interval) * x["s0X"]
 	izmer["prp"] = stu(9999, interval) * accuracy / 3
 	izmer["obp"] = (izmer["slp"] ** 2 + izmer["prp"] ** 2) ** (1 / 2)
+
 	if debug:
 		return izmer
 	else:
 		return x["srX"], izmer["obp"]
-
-
-def typetest(input_data: tuple | list, include: tuple | list, name: dict[int, ...] = None) -> bool:
-	"""
-	Функция для проверки типа и вызова исключения
-	:param input_data: в виде списка значения
-	:param include: с какими типами сравнивать
-	:param name: имена переменных для ошибок
-	:return:
-	"""
-	if name is None:
-		name = {i: i for i in range(len(input_data))}
-	else:
-		name = {i: i for i in range(len(input_data))} | name
-	for i, q in zip(input_data, name):
-		i_type = type(i)
-		if i_type not in include:
-			raise TypeError(f"{name[q]} - {i_type} не {include}")
-	return True
 
 
 def nerav_izmer(
@@ -219,14 +246,16 @@ def nerav_izmer(
 	"""
 	Неравноточные измерения
 
-	:param debug:
 	:param data: значения
 	:param errors: погрешности
+	:param debug: режим разработчика
+	:return: средние значение и абсолютная погрешность
 	"""
-	if typetest((data, errors), (tuple, list), {0: "data", 1: "errors"}):
-		for i in (data, errors):
-			typetest(i, (int, float))
-	typetest((debug,), (bool,))
+
+	typetest((data, errors), (tuple, list), {0: "data", 1: "errors"})
+	typetest(data, (int, float))
+	typetest(errors, (int, float))
+	typetest((debug,), (bool,), {0: "debug"})
 
 	izmer: dict[str, int | float | list] = dict()
 	izmer["w"] = list(map(lambda x: 1 / x ** 2, errors))
