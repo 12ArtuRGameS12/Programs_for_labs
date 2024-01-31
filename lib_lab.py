@@ -65,7 +65,7 @@ def stu(n: int, a: int = 2) -> float:
 	:return: значение Стьюдента
 	"""
 
-	typetest((n, a), (int, ), {0: "n", 1: "a"})
+	typetest((n, a), (int,), {0: "n", 1: "a"})
 
 	if a not in (1, 2, 3):
 		raise ValueError(f"Нету в таблице такой доверительной вероятности как {a}")
@@ -120,7 +120,7 @@ def rotate(tabel: tuple | list) -> tuple | list:
 	Переворачивает таблицу на бок
 	"""
 
-	typetest((tabel, ), (tuple, list), {0: "tabel"})
+	typetest((tabel,), (tuple, list), {0: "tabel"})
 
 	if type(tabel) is list:
 		x = [list(i) for i in zip(*tabel)]
@@ -163,16 +163,20 @@ def stat(
 	:return: словарь данных
 	"""
 
-	typetest((arg1, ), (tuple, list), {0: "arg1"})
+	typetest((arg1,), (tuple, list), {0: "arg1"})
 	typetest(arg1, (int, float))
 	if len(arg1) <= 1:
 		raise ValueError("Меньше двух нельзя")
 
 	if arg2:
-		typetest((arg2, ), (tuple, list), {0: "arg2"})
+		typetest((arg2,), (tuple, list), {0: "arg2"})
 		typetest(arg2, (int, float))
-		if len(arg2) <= 1:
+		arg1_len = len(arg1)
+		arg2_len = len(arg2)
+		if arg2_len <= 1:
 			raise ValueError("Меньше двух нельзя")
+		if arg1_len != arg2_len:
+			raise ValueError(f"Длина arg1 - {arg1_len} != arg2 - {arg2_len}")
 
 	def _stat1(arg: tuple[int | float, ...] | list[int | float], name: str) -> dict[str, int | float | list]:
 
@@ -222,10 +226,10 @@ def prim_izmer(
 	:return: средние значение и абсолютная погрешность
 	"""
 
-	typetest((data, ), (tuple, list), {0: "data"})
+	typetest((data,), (tuple, list), {0: "data"})
 	typetest(data, (int, float))
-	typetest((accuracy, ), (int, float), {0: "accuracy"})
-	typetest((debug, ), (bool, ), {0: "debug"})
+	typetest((accuracy,), (int, float), {0: "accuracy"})
+	typetest((debug,), (bool,), {0: "debug"})
 
 	izmer: dict[str, int | float] = dict()
 	x = stat(data)
@@ -269,6 +273,64 @@ def nerav_izmer(
 		return izmer
 	else:
 		return izmer["value"], izmer["err"]
+
+
+def mnc(
+		arg1: tuple[int | float, ...] | list[int | float],
+		arg2: tuple[int | float, ...] | list[int | float],
+		mode: int = 1,
+		debug: bool = False) \
+		-> ((tuple[float, tuple[float, float], tuple[float, float]] |
+			 tuple[float, tuple[float, float]]) |
+			dict[str, int | float | list]):
+	"""
+	Метод наименьших квадратов
+
+	:param arg1: значения x
+	:param arg2: значения y
+	:param mode: 1 = ax + b, 2 = ax
+	:param debug: режим разработчика
+	:return: R, (a, da), (b, db)
+	"""
+
+	typetest((arg1, arg2), (tuple, list), {0: "arg1", 1: "arg2"})
+	typetest(arg1, (int, float))
+	typetest(arg2, (int, float))
+	if mode not in (1, 2):
+		raise ValueError(f"Нету такой формулы {mode}")
+	typetest((debug,), (bool,), {0: "debug"})
+
+	stt1 = stat(arg1, arg2)
+	mncc1: dict[str, int | float | list] = dict()
+
+	if mode == 1:
+		if (len(arg1) < 3) or (len(arg2) < 3):
+			raise ValueError("Меньше трёх нельзя")
+
+		mncc1["a0"] = (stt1["nX"] * stt1["sumXY"] - stt1["sumX"] * stt1["sumY"]) / (
+				stt1["nX"] * stt1["sumX2"] - stt1["sumX"] ** 2)
+		mncc1["b0"] = (stt1["sumX2"] * stt1["sumY"] - stt1["sumX"] * stt1["sumXY"]) / (
+				stt1["nX"] * stt1["sumX2"] - stt1["sumX"] ** 2)
+		mncc1["r0"] = (stt1["sumXXYY"]) / ((stt1["sumXX2"] ** (1 / 2)) * (stt1["sumYY2"] ** (1 / 2)))
+		mncc1["q"] = list(map(lambda x, y: (mncc1["a0"] * x + mncc1["b0"] - y) ** 2, arg1, arg2))
+		mncc1["sum_q"] = sum(mncc1["q"])
+		mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 2) * stt1["sumXX2"])) ** (1 / 2)
+		mncc1["sb"] = (mncc1["sum_q"] / stt1["nX"] / (stt1["nX"] - 2) + stt1["srX"] ** 2 * mncc1["sa"]) ** (1 / 2)
+		mncc1["da"] = stu(stt1["nX"] - 2) * mncc1["sa"]
+		mncc1["db"] = stu(stt1["nX"] - 2) * mncc1["sb"]
+	else:
+		mncc1["r0"] = (stt1["sumXXYY"]) / ((stt1["sumXX2"] ** (1 / 2)) * (stt1["sumYY2"] ** (1 / 2)))
+		mncc1["a0"] = stt1["sumXY"] / stt1["sumX2"]
+		mncc1["q"] = list(map(lambda x, y: (mncc1["a0"] * x - y) ** 2, arg1, arg2))
+		mncc1["sum_q"] = sum(mncc1["q"])
+		mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 1) * stt1["sumXX2"])) ** (1 / 2)
+		mncc1["da"] = stu(stt1["nX"] - 1) * mncc1["sa"]
+		return mncc1["r0"], (mncc1["a0"], mncc1["da"])
+
+	if debug:
+		return mncc1
+	else:
+		return mncc1["r0"], (mncc1["a0"], mncc1["da"]), (mncc1["b0"], mncc1["db"])
 
 
 class LegacyF:
@@ -533,19 +595,6 @@ class LegacyF:
 				z0 = z0.subs(i[0], q)
 			w1.append(z0)
 		return w0, w1
-
-	@staticmethod
-	def naimcv(a, b):
-		x = stat(a, b)
-		a0 = (x["nx"] * x["sumxy"] - x["sumx"] * x["sumy"]) / (x["nx"] * x["sumx2"] - x["sumx"] ** 2)
-		b0 = (x["sumx2"] * x["sumy"] - x["sumx"] * x["sumxy"]) / (x["nx"] * x["sumx2"] - x["sumx"] ** 2)
-		r0 = (x["sumxxyy"]) / ((x["sumxx2"] ** (1 / 2)) * (x["sumyy2"] ** (1 / 2)))
-		Q = sum(map(lambda x, y: (a0 * x + b0 - y) ** 2, a, b))
-		sa = (Q / ((x["nx"] - 2) * x["sumxx2"])) ** (1 / 2)
-		sb = (Q / x["nx"] / (x["nx"] - 2) + x["srx"] ** 2 * sa) ** (1 / 2)
-		da = stu(x["nx"] - 2) * sa
-		db = stu(x["nx"] - 2) * sb
-		return r0, (a0, da), (b0, db)
 
 	@staticmethod
 	def tpp(*a, b=False):

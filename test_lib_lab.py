@@ -91,3 +91,14 @@ class Testtest_lib_lab(TestCase):
 		self.assertRaisesRegex(TypeError, "data - str не tuple или list", nerav_izmer, "1234", [0.4, 0.5, 0.6])
 		self.assertRaisesRegex(TypeError, "2 - str не int или float", nerav_izmer, [1, 2, "3"], [0.4, 0.5, 0.6])
 		self.assertRaisesRegex(TypeError, "debug - str не bool", nerav_izmer, [1, 2, 3], [0.4, 0.5, 0.6], "1234")
+
+	def test_mnc(self):
+		self.assertEqual(mnc([1, 2, 3], [0.4, 0.5, 0.6]), (
+			0.9999999999999999, (0.09999999999999994, 9.974797390018023e-16), (0.3000000000000001, 2.2515752320326228e-07)))
+		self.assertEqual(mnc([1, 2, 3], [1, 2, 3], 2), (0.9999999999999998, (1.0, 0.0)))
+
+		self.assertRaisesRegex(TypeError, "arg1 - str не tuple или list", mnc, "1234", [1, 2, 3])
+		self.assertRaisesRegex(TypeError, "debug - str не bool", mnc, [1, 2, 3], [0.4, 0.5, 0.6], 1, "1234")
+		self.assertRaisesRegex(ValueError, "Нету такой формулы 5", mnc, [1, 2, 3], [1, 2, 3], 5)
+		self.assertRaisesRegex(ValueError, "Меньше трёх нельзя", mnc, [1, 2], [1, 2])
+
