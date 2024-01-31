@@ -279,16 +279,16 @@ def mnc(
 		arg1: tuple[int | float, ...] | list[int | float],
 		arg2: tuple[int | float, ...] | list[int | float],
 		mode: int = 1,
-		debug: bool = False) \
-		-> ((tuple[float, tuple[float, float], tuple[float, float]] |
-			 tuple[float, tuple[float, float]]) |
-			dict[str, int | float | list]):
+		debug: bool = False) -> \
+		((tuple[float, tuple[float, float], tuple[float, float]] |
+		tuple[float, tuple[float, float]]) |
+		dict[str, int | float | list]):
 	"""
 	Метод наименьших квадратов
 
 	:param arg1: значения x
 	:param arg2: значения y
-	:param mode: 1 = ax + b, 2 = ax
+	:param mode: 1: y = ax + b, 2: y = ax
 	:param debug: режим разработчика
 	:return: R, (a, da), (b, db)
 	"""
@@ -305,7 +305,7 @@ def mnc(
 
 	if mode == 1:
 		if (len(arg1) < 3) or (len(arg2) < 3):
-			raise ValueError("Меньше трёх нельзя")
+			raise ValueError("Меньше трёх нельзя в режиме 1")
 
 		mncc1["a0"] = (stt1["nX"] * stt1["sumXY"] - stt1["sumX"] * stt1["sumY"]) / (
 				stt1["nX"] * stt1["sumX2"] - stt1["sumX"] ** 2)
@@ -331,6 +331,65 @@ def mnc(
 		return mncc1
 	else:
 		return mncc1["r0"], (mncc1["a0"], mncc1["da"]), (mncc1["b0"], mncc1["db"])
+
+
+def cosn_izmer_formul(formul: str, *varabels: str) -> str:
+	"""
+	Дельта формулы при косвенных измерениях
+
+	:param formul: формула
+	:param varabels: значения, у которых есть погрешность
+	:return: дельта формулы
+	"""
+
+	typetest((formul, *varabels), (str,), {0: formul})
+
+	import sympy
+	x = sympy.sympify(0)
+	for i in varabels:
+		x += (sympy.diff(formul, i) * sympy.symbols(f"d{i}")) ** 2
+	x = sympy.sqrt(x)
+	return x.__str__()
+
+
+def convert2number(num_str: str) -> int | float:
+	"""
+	Конвертируя строку в число
+
+	:param num_str: число в виде строки
+	:return: число в виде int или float
+	"""
+
+	typetest((num_str,), (str,), {0: "num_str"})
+
+	try:
+		x = int(num_str)
+	except ValueError:
+		x = float(num_str)
+
+	return x
+
+
+def formul_exe(
+		formul: str,
+		varabels: dict[str, int | float | str]) -> tuple[int, str] | tuple[float, str]:
+	"""
+	Счёт значения формулы
+
+	:param formul:
+	:param varabels:
+	:return: значение формулы
+	"""
+
+	typetest((varabels,), (dict,), {0: "varabels"})
+	typetest((formul, *varabels), (str,), {0: "formul"})
+	typetest(([varabels[i] for i in varabels]), (int, float, str))
+
+	import sympy
+	formul = sympy.sympify(formul)
+	formul = formul.subs(varabels)
+
+	return convert2number(formul.evalf().__str__()), formul.__str__()
 
 
 class LegacyF:
@@ -560,41 +619,6 @@ class LegacyF:
 			x1[t] = list(map(q, i))
 		x = [x0, *rotate(x1)[1]]
 		return x
-
-	@staticmethod
-	def cosn_izmer(formul, tabel):
-		"""
-	Косвенные измерения
-
-		:param formul:
-		:param tabel:
-		:return:
-		"""
-		import sympy
-		symb = rotate(tabel[0])[1][0]
-		formul = sympy.simplify(formul)
-
-		delta_cosn_izmer = sympy.sympify(0)
-		for i, q in zip(symb[::2], symb[1::2]):
-			q = sympy.symbols(q)
-			x = sympy.diff(formul, i) ** 2 * q ** 2
-			delta_cosn_izmer += x
-		delta_cosn_izmer = sympy.sqrt(delta_cosn_izmer)
-
-		w0 = []
-		for q in tabel[1:]:
-			z0 = formul
-			for i, q in zip(tabel[0], q):
-				z0 = z0.subs(i[0], q)
-			w0.append(z0)
-
-		w1 = []
-		for q in tabel[1:]:
-			z0 = delta_cosn_izmer
-			for i, q in zip(tabel[0], q):
-				z0 = z0.subs(i[0], q)
-			w1.append(z0)
-		return w0, w1
 
 	@staticmethod
 	def tpp(*a, b=False):

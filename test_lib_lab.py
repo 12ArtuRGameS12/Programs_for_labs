@@ -100,5 +100,24 @@ class Testtest_lib_lab(TestCase):
 		self.assertRaisesRegex(TypeError, "arg1 - str не tuple или list", mnc, "1234", [1, 2, 3])
 		self.assertRaisesRegex(TypeError, "debug - str не bool", mnc, [1, 2, 3], [0.4, 0.5, 0.6], 1, "1234")
 		self.assertRaisesRegex(ValueError, "Нету такой формулы 5", mnc, [1, 2, 3], [1, 2, 3], 5)
-		self.assertRaisesRegex(ValueError, "Меньше трёх нельзя", mnc, [1, 2], [1, 2])
+		self.assertRaisesRegex(ValueError, "Меньше трёх нельзя в режиме 1", mnc, [1, 2], [1, 2])
 
+	def test_cosn_izmer_formul(self):
+		self.assertEqual(cosn_izmer_formul("a**3 + b*2", "a", "b"), "sqrt(9*a**4*da**2 + 4*db**2)")
+		self.assertEqual(cosn_izmer_formul("123", "a", "b"), "0")
+
+		self.assertRaisesRegex(TypeError, "123 - int не str", cosn_izmer_formul, 123, "1")
+		self.assertRaisesRegex(TypeError, "2 - int не str", cosn_izmer_formul, "a*5", "b", 1234)
+
+	def test_convert2number(self):
+		self.assertEqual(convert2number("12.3"), 12.3)
+
+		self.assertRaisesRegex(TypeError, "num_str - int не str", convert2number, 1234)
+
+	def test_formul_exe(self):
+		self.assertEqual(formul_exe(
+			"sqrt(9*a**4*da**2 + 4*db**2)", {"a": 4, "da": 2, "b": 5, "db": 1}), (96.0208310732624, "2*sqrt(2305)"))
+
+		self.assertRaisesRegex(TypeError, "formul - int не str", formul_exe, 1234, {"a": 5})
+		self.assertRaisesRegex(TypeError, "varabels - int не dict", formul_exe, "a+b", 1234)
+		self.assertRaisesRegex(TypeError, "1 - int не str", formul_exe, "a+b", {1234: 5})
