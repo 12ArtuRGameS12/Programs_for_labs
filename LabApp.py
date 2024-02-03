@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-import lib_lab_0_2 as lb
+import lib_lab as lb
 
 
 def clear(a):
