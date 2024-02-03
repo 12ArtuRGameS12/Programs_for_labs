@@ -4,6 +4,7 @@
 sympy, matplotlib
 """
 
+
 # from typing import Any
 
 
@@ -277,10 +278,10 @@ def mnc(
         arg1: tuple[int | float, ...] | list[int | float],
         arg2: tuple[int | float, ...] | list[int | float],
         mode: int = 1,
-        debug: bool = False) -> \
-        ((tuple[float, tuple[float, float], tuple[float, float]] |
-        tuple[float, tuple[float, float]]) |
-        dict[str, int | float | list]):
+        debug: bool = False) -> (
+        (tuple[float, tuple[float, float], tuple[float, float]] |
+         tuple[float, tuple[float, float]]
+         ) | dict[str, int | float | list]):
     """Метод наименьших квадратов
 
     :param arg1: значения x
