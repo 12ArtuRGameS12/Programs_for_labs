@@ -111,7 +111,7 @@ class MyApp(App):
         try:
             if all(i.text == "" for i in text_input[:-1]): raise Exception("")
             x = text_input[0].text
-            y = (i.split("=") for i in text_input[1].text.split())
+            y = (i.split("=") for i in lb.clr_sp(text_input[1].text, "=").split())
             y = {i[0]: i[1] for i in y}
             x1 = lb.formul_exe(x, y)
             x2 = ""
