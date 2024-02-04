@@ -1,48 +1,84 @@
 from kivy.app import App
+from kivy.uix.textinput import TextInput
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.checkbox import CheckBox
 import lib_lab as lb
 
 
+class MyTextInput(TextInput):
+    def on_double_tap(self):
+        self._select_word(delimiters=u' :;!?\'"<>()[]{}')
+
+
 def clear(a):
-    x = True if a.find(",") != -1 else False
-    y = True if a.find(".") != -1 else False
-    a = lb.clr_sp(a)
-    a = [float(i) for i in a.split()]
-    return a
+    return [lb.convert2number(i) for i in lb.clr_sp(a).split()]
 
 
 class MyApp(App):
-    def calc1(self, text_input):
+    def test(*args, **kargs):
+        print(args)
+        print(kargs)
+
+    def calc1(self, text_input, dev):
         try:
-            if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = clear(text_input[0].text)
-            y = float(text_input[1].text)
-            z = int(text_input[2].text) if len(text_input[2].text) else 2
-            x1 = lb.prim_izmer(x, y, z)
-            x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
+            x0 = text_input[-2].children
+            y0 = len(x0) // 2
+            z = 0
+            for i in range(y0):
+                if x0[i].active:
+                    z = abs(y0 - i)
+                    break
+            if all(i.text == "" for i in text_input[:-2]): raise Exception("")
+            x = clear(text_input[0].text.replace(",", "."))
+            y = lb.convert2number(text_input[1].text.replace(",", "."))
+            x1 = lb.prim_izmer(x, y, z, dev)
+            if not dev:
+                x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
+            else:
+                x2 = ""
+                for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
             text_input[-1].text = x2
         except Exception as err:
             text_input[-1].text = str(err)
 
-    def calc2(self, text_input):
+    def calc2(self, text_input, dev):
         try:
-            if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = clear(text_input[0].text)
-            y = clear(text_input[1].text)
+            x0 = text_input[-2].children
+            y0 = len(x0) // 2
+            z = 0
+            for i in range(y0):
+                if x0[i].active:
+                    z = abs(y0 - i)
+                    break
+            if all(i.text == "" for i in text_input[:-2]): raise Exception("")
+            x = clear(text_input[0].text.replace(",", "."))
+            y = clear(text_input[1].text.replace(",", "."))
 
-            x1 = lb.mnc(x, y)
-            x2 = f"y=ax+b\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}\nb = {x1[2][0]}\ndb = {x1[2][1]}"
+            x1 = lb.mnc(x, y, z, dev)
+            if not dev:
+                if z == 1:
+                    x2 = f"y=ax+b\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}\nb = {x1[2][0]}\ndb = {x1[2][1]}"
+                else:
+                    x2 = f"y=ax\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}"
+            else:
+                x2 = ""
+                for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
             text_input[-1].text = x2
         except Exception as err:
             text_input[-1].text = str(err)
 
-    def calc3(self, text_input):
+    def calc3(self, text_input, dev):
         try:
             if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = clear(text_input[0].text)
-            y = clear(text_input[1].text)
+            x = clear(text_input[0].text.replace(",", "."))
+            y = clear(text_input[1].text.replace(",", "."))
 
-            x1 = lb.nerav_izmer(x, y)
-            x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
+            x1 = lb.nerav_izmer(x, y, dev)
+            if not dev:
+                x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
+            else:
+                x2 = ""
+                for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
             text_input[-1].text = x2
         except Exception as err:
             text_input[-1].text = str(err)

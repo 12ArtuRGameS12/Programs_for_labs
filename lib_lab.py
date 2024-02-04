@@ -221,7 +221,7 @@ def prim_izmer(
 
     :param data: данные
     :param accuracy: точность прибора
-    :param interval: доверительный интервал
+    :param interval: доверительная вероятность(1=90%, 2=95%, 3=99%)
     :param debug: режим разработчика
     :return: средние значение и абсолютная погрешность
     """

@@ -9,6 +9,10 @@ ScreenManager:
             orientation: "vertical"
             padding: (20, 20)
             Button:
+                text: "Настройки"
+                on_press:
+                    sm.current = self.text
+            Button:
                 text: "Прямые измерения"
                 on_press:
                     sm.current = self.text
@@ -20,32 +24,78 @@ ScreenManager:
                 text: "Неравноточные измерения"
                 on_press:
                     sm.current = self.text
+    Screen:
+        name: "Настройки"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (20, 20)
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
+            BoxLayout:
+                Label:
+                    text: "Debug mode"
+                BoxLayout:
+                    GridLayout:
+                        cols: 2
+                        CheckBox:
+                            group: "Настройки CB2"
+                            active: True
+                        CheckBox:
+                            group: "Настройки CB2"
+                            id: debug
+
+                        Label:
+                            text: "off"
+                        Label:
+                            text: "on"
 
     Screen:
         name: "Прямые измерения"
         BoxLayout:
             orientation: "vertical"
             padding: (20, 20)
-            id: kkk
             Button:
                 text: "Home"
                 on_press:
                     sm.current = self.text
             TextInput:
-                hint_text: "Данные: 1.3 2.5 4.74 или 1.3, 2.5, 4.74"
+                hint_text: "Данные: 1.3 2.5 4.74"
                 id: i_pz_0
             TextInput:
                 hint_text: "Точность прибора"
                 id: i_pz_1
-            TextInput:
-                hint_text: "1=90% 2=95% 3=99 По умолчанию: 2"
-                id: i_pz_2
-            TextInput:
+            BoxLayout:
+                orientation: "vertical"
+                Label:
+                    text: "Доверительный интервал"
+                    size_hint: (1, .33)
+                GridLayout:
+                    cols: 3
+                    id: i_pz_2
+
+                    Label:
+                        text: "90%"
+                    Label:
+                        text: "95%"
+                    Label:
+                        text: "99%"
+
+                    CheckBox:
+                        group: "Прямые измерения CB"
+                    CheckBox:
+                        group: "Прямые измерения CB"
+                        active: True
+                    CheckBox:
+                        group: "Прямые измерения CB"
+
+            MyTextInput:
                 hint_text: "Результат"
                 id: i_pz_3
             Button:
                 text: "calc"
-                on_press: app.calc1((i_pz_0, i_pz_1, i_pz_2, i_pz_3))
+                on_press: app.calc1((i_pz_0, i_pz_1, i_pz_2, i_pz_3), debug.active)
 
 
 
@@ -64,12 +114,26 @@ ScreenManager:
             TextInput:
                 hint_text: "y"
                 id: i_mnk_1
-            TextInput:
-                hint_text: "Результат"
+
+            GridLayout:
+                cols: 2
                 id: i_mnk_2
+                Label:
+                    text: "y = ax + b"
+                Label:
+                    text: "y = ax"
+
+                CheckBox:
+                    group: "МНК CB"
+                    active: True
+                CheckBox:
+                    group: "МНК CB"
+            MyTextInput:
+                hint_text: "Результат"
+                id: i_mnk_3
             Button:
                 text: "calc"
-                on_press: app.calc2((i_mnk_0, i_mnk_1, i_mnk_2))
+                on_press: app.calc2((i_mnk_0, i_mnk_1, i_mnk_2, i_mnk_3), debug.active)
 
 
     Screen:
@@ -87,9 +151,9 @@ ScreenManager:
             TextInput:
                 hint_text: "Погрешность значений"
                 id: i_nr_1
-            TextInput:
+            MyTextInput:
                 hint_text: "Результат"
                 id: i_nr_2
             Button:
                 text: "calc"
-                on_press: app.calc3((i_nr_0, i_nr_1, i_nr_2))
+                on_press: app.calc3((i_nr_0, i_nr_1, i_nr_2), debug.active)
