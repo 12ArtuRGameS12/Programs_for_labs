@@ -41,23 +41,47 @@ def typetest(
     return True
 
 
-def clr_sp(text: str) -> str:
+def clr_sp(text: str, *car_cls: str) -> str:
     """Чистит водимую строку от лишних пробелов"""
 
-    typetest((text,), (str,), {0: "text"})
+    typetest((text, *car_cls), (str,), {0: "text"})
 
     while text.find("  ") != -1:
         text = text.replace("  ", " ")
-    while text.find(" ,") != -1:
-        text = text.replace(" ,", ",")
-    while text.find(", ") != -1:
-        text = text.replace(", ", ",")
+    for i in car_cls:
+        while text.find(f" {i}") != -1:
+            text = text.replace(f" {i}", f"{i}")
+        while text.find(f"{i} ") != -1:
+            text = text.replace(f"{i} ", f"{i}")
     if text[0] == " ":
         text = text[1:]
     if text[-1] == " ":
         text = text[:-1]
 
     return text
+
+
+def sup_rep(text: str, rep: dict[str, str]) -> str:
+    """Массовая замена символов
+
+    :param text: исходный текст
+    :param rep: словарь замен
+    :return: изменённый текст
+    """
+
+    typetest((rep,), (dict,), {0: "rep"})
+    typetest((text, *rep,), (str,), {0: "text"})
+    typetest(([rep[i] for i in rep]), (str,))
+
+    new_text = str()
+    for i in text:
+        for q in rep:
+            if i == q:
+                new_text += rep[q]
+                break
+        else:
+            new_text += i
+    return new_text
 
 
 def stu(n: int, a: int = 2) -> float:
