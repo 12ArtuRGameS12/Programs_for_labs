@@ -384,7 +384,11 @@ def formul_exe(
     formula = sympy.sympify(formula)
     formula = formula.subs(varabels)
 
-    return convert2number(formula.evalf().__str__()), formula.__str__()
+    try:
+        x = convert2number(formula.evalf().__str__())
+    except ValueError:
+        x = "err"
+    return x, formula.__str__()
 
 
 class _LegacyF:

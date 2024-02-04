@@ -3,6 +3,7 @@
 ScreenManager:
     transition: NoTransition()
     id: sm
+
     Screen:
         name: "Home"
         BoxLayout:
@@ -24,6 +25,19 @@ ScreenManager:
                 text: "Неравноточные измерения"
                 on_press:
                     sm.current = self.text
+            Button:
+                text: "Статистика"
+                on_press:
+                    sm.current = self.text
+            Button:
+                text: "Косвенные измерения"
+                on_press:
+                    sm.current = self.text
+            Button:
+                text: "Формулы exe"
+                on_press:
+                    sm.current = self.text
+
     Screen:
         name: "Настройки"
         BoxLayout:
@@ -157,3 +171,69 @@ ScreenManager:
             Button:
                 text: "calc"
                 on_press: app.calc3((i_nr_0, i_nr_1, i_nr_2), debug.active)
+
+    Screen:
+        name: "Статистика"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (20, 20)
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
+            TextInput:
+                hint_text: "x"
+                id: i_st_0
+            TextInput:
+                hint_text: "y"
+                id: i_st_1
+            MyTextInput:
+                hint_text: "Результат"
+                id: i_st_2
+            Button:
+                text: "calc"
+                on_press: app.calc4((i_st_0, i_st_1, i_st_2))
+
+    Screen:
+        name: "Косвенные измерения"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (20, 20)
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
+            TextInput:
+                hint_text: "Формула"
+                id: i_cs_0
+            TextInput:
+                hint_text: "Значения"
+                id: i_cs_1
+            MyTextInput:
+                hint_text: "Результат"
+                id: i_cs_2
+            Button:
+                text: "calc"
+                on_press: app.calc5((i_cs_0, i_cs_1, i_cs_2))
+    Screen:
+        name: "Формулы exe"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (20, 20)
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
+            TextInput:
+                hint_text: "Формула"
+                id: i_fe_0
+            TextInput:
+                hint_text: "Значения"
+                id: i_fe_1
+            MyTextInput:
+                hint_text: "Результат"
+                id: i_fe_2
+            Button:
+                text: "calc"
+                on_press: app.calc6((i_fe_0, i_fe_1, i_fe_2))
+
