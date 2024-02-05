@@ -1,14 +1,24 @@
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 
+<MyBoxLayout@BoxLayout>:
+    orientation: "vertical"
+    padding: (50, 20)
+    spacing: 5
+
+<ButtonHome@Button>:
+    text: "Home"
+    on_press:
+        root.parent.parent.parent.current = self.text
+
+
 ScreenManager:
     transition: NoTransition()
     id: sm
 
+
     Screen:
         name: "Home"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
+        MyBoxLayout:
             Button:
                 text: "Настройки"
                 on_press:
@@ -40,13 +50,9 @@ ScreenManager:
 
     Screen:
         name: "Настройки"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
+        MyBoxLayout:
+            ButtonHome:
+
             BoxLayout:
                 Label:
                     text: "Debug mode"
@@ -68,7 +74,6 @@ ScreenManager:
                             text_size: self.size
                         Label:
                             text: "on"
-                            text: "off"
                             valign: "top"
                             halign: "center"
                             text_size: [None, None]
@@ -76,17 +81,13 @@ ScreenManager:
 
     Screen:
         name: "Прямые измерения"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
-            TextInput:
+        MyBoxLayout:
+            ButtonHome:
+
+            MyTextInput:
                 hint_text: "Данные: 1.3 2.5 4.74"
                 id: i_pz_0
-            TextInput:
+            MyTextInput:
                 hint_text: "Точность прибора"
                 id: i_pz_1
             BoxLayout:
@@ -124,17 +125,13 @@ ScreenManager:
 
     Screen:
         name: "МНК"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
-            TextInput:
+        MyBoxLayout:
+            ButtonHome:
+
+            MyTextInput:
                 hint_text: "x"
                 id: i_mnk_0
-            TextInput:
+            MyTextInput:
                 hint_text: "y"
                 id: i_mnk_1
 
@@ -161,17 +158,13 @@ ScreenManager:
 
     Screen:
         name: "Неравноточные измерения"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
-            TextInput:
+        MyBoxLayout:
+            ButtonHome:
+
+            MyTextInput:
                 hint_text: "Среднее значения"
                 id: i_nr_0
-            TextInput:
+            MyTextInput:
                 hint_text: "Погрешность значений"
                 id: i_nr_1
             MyTextInput:
@@ -183,17 +176,13 @@ ScreenManager:
 
     Screen:
         name: "Статистика"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
-            TextInput:
+        MyBoxLayout:
+            ButtonHome:
+
+            MyTextInput:
                 hint_text: "x"
                 id: i_st_0
-            TextInput:
+            MyTextInput:
                 hint_text: "y"
                 id: i_st_1
             MyTextInput:
@@ -205,17 +194,13 @@ ScreenManager:
 
     Screen:
         name: "Косвенные измерения"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
-            TextInput:
+        MyBoxLayout:
+            ButtonHome:
+
+            MyTextInput:
                 hint_text: "Формула"
                 id: i_cs_0
-            TextInput:
+            MyTextInput:
                 hint_text: "Значения"
                 id: i_cs_1
             MyTextInput:
@@ -226,17 +211,13 @@ ScreenManager:
                 on_press: app.calc5((i_cs_0, i_cs_1, i_cs_2))
     Screen:
         name: "Формулы exe"
-        BoxLayout:
-            orientation: "vertical"
-            padding: (20, 20)
-            Button:
-                text: "Home"
-                on_press:
-                    sm.current = self.text
-            TextInput:
+        MyBoxLayout:
+            ButtonHome:
+
+            MyTextInput:
                 hint_text: "Формула"
                 id: i_fe_0
-            TextInput:
+            MyTextInput:
                 hint_text: "Значения"
                 id: i_fe_1
             MyTextInput:
