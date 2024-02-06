@@ -1,4 +1,5 @@
-import traceback
+# import traceback
+# traceback.format_exc()
 
 from kivy.app import App
 
@@ -6,6 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivy.uix.togglebutton import ToggleButton
 
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
@@ -41,9 +43,32 @@ class MyTextInput(TextInputFixed):
     input_type = "text"
     keyboard_suggestions = True
     keyboard_mode = 'managed'
+    filt = None
+
+    def insert_text(self, substring, from_undo=False):
+        if self.filt:
+            if substring not in self.filt:
+                substring = ""
+        return super().insert_text(substring, from_undo=from_undo)
 
     def on_double_tap(self):
         self._select_word(delimiters=u' :;!?\'"<>()[]{}')
+
+
+class MyToggleButton(ToggleButton):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.bind(state=self.chec_state)
+
+        self.text_down = self.text
+        self.text_normal = self.text
+        # self.chec_state(self, self.state)
+
+    def chec_state(self, _, value):
+        if value == "down":
+            self.text = self.text_down
+        else:
+            self.text = self.text_normal
 
 
 def clear(a):
@@ -51,6 +76,12 @@ def clear(a):
 
 
 class MyApp(App):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.dev = False
+        self.interval = 2
+
     def build(self):
         Window.bind(on_keyboard=self.Android_back_click)
 
@@ -80,110 +111,102 @@ class MyApp(App):
         mybutton.bind(on_release=self.stop)
         popup.open()
 
-    def test(*args, **kargs):
-        print(args)
-        print(kargs)
+    def test(self, *args, **kargs):
+        print(self, args, kargs)
+        for i in self.__dict__: print(i, self.__dict__[i])
 
-    def calc1(self, text_input, dev):
+    def calc1(self, text_input, output):
         try:
-            x0 = text_input[-2].children
-            y0 = len(x0) // 2
-            z = 0
-            for i in range(y0):
-                if x0[i].active:
-                    z = abs(y0 - i)
-                    break
-            if all(i.text == "" for i in text_input[:-2]): raise Exception("")
-            x = clear(text_input[0].text.replace(",", "."))
-            y = lb.convert2number(text_input[1].text.replace(",", "."))
-            x1 = lb.prim_izmer(x, y, z, dev)
-            if not dev:
+            if all(i == "" for i in text_input): raise Exception("")
+
+            x = clear(text_input[0].replace(",", "."))
+            y = clear(text_input[1].replace(",", "."))[0]
+
+            x1 = lb.prim_izmer(data=x, accuracy=y, interval=self.interval, debug=self.dev)
+            if not self.dev:
                 x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
             else:
                 x2 = ""
                 for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
-            text_input[-1].text = x2
+            output.text = x2
         except Exception as err:
-            text_input[-1].text = str(err)
+            output.text = str(err)
 
-    def calc2(self, text_input, dev):
+    def calc2(self, text_input, mode, output):
         try:
-            x0 = text_input[-2].children
-            y0 = len(x0) // 2
-            z = 0
-            for i in range(y0):
-                if x0[i].active:
-                    z = abs(y0 - i)
-                    break
-            if all(i.text == "" for i in text_input[:-2]): raise Exception("")
-            x = clear(text_input[0].text.replace(",", "."))
-            y = clear(text_input[1].text.replace(",", "."))
+            if all(i == "" for i in text_input): raise Exception("")
+            x = clear(text_input[0].replace(",", "."))
+            y = clear(text_input[1].replace(",", "."))
 
-            x1 = lb.mnc(x, y, z, dev)
-            if not dev:
-                if z == 1:
+            x1 = lb.mnc(arg1=x, arg2=y, interval=self.interval, mode=mode, debug=self.dev)
+            if not self.dev:
+                if mode == 1:
                     x2 = f"y=ax+b\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}\nb = {x1[2][0]}\ndb = {x1[2][1]}"
                 else:
                     x2 = f"y=ax\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}"
             else:
                 x2 = ""
                 for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
-            text_input[-1].text = x2
+            output.text = x2
         except Exception as err:
-            text_input[-1].text = str(err)
+            output.text = str(err)
 
-    def calc3(self, text_input, dev):
+    def calc3(self, text_input, output):
         try:
-            if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = clear(text_input[0].text.replace(",", "."))
-            y = clear(text_input[1].text.replace(",", "."))
+            if all(i == "" for i in text_input): raise Exception("")
+            x = clear(text_input[0].replace(",", "."))
+            y = clear(text_input[1].replace(",", "."))
 
-            x1 = lb.nerav_izmer(x, y, dev)
-            if not dev:
+            x1 = lb.nerav_izmer(data=x, errors=y, debug=self.dev)
+            if not self.dev:
                 x2 = f"sred = {x1[0]}\ndelta = {x1[1]}"
             else:
                 x2 = ""
                 for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
-            text_input[-1].text = x2
+            output.text = x2
         except Exception as err:
-            text_input[-1].text = str(err)
+            output.text = str(err)
 
-    def calc4(self, text_input):
+    def calc4(self, text_input, output):
         try:
-            if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = clear(text_input[0].text.replace(",", "."))
-            y = clear(text_input[1].text.replace(",", "."))
+            print(text_input, list(i == "" for i in text_input), all(i == "" for i in text_input))
+            if all(i == "" for i in text_input): raise Exception("")
+            x = clear(text_input[0].replace(",", "."))
 
-            x1 = lb.stat(x, y)
+            if text_input[1]:
+                y = clear(text_input[1].replace(",", "."))
+                x1 = lb.stat(x, y)
+            else:
+                x1 = lb.stat(x)
             x2 = ""
             for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
-            text_input[-1].text = x2
+            output.text = x2
         except Exception as err:
-            text_input[-1].text = str(err)
+            output.text = str(err)
 
-    def calc5(self, text_input):
+    def calc5(self, text_input, output):
         try:
-            if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = text_input[0].text
-            y = text_input[1].text.split()
+            if all(i == "" for i in text_input): raise Exception("")
+            x = text_input[0]
+            y = text_input[1].split()
 
             x1 = lb.cosn_izmer_formula(x, *y)
-            text_input[-1].text = x1
+            output.text = x1
         except Exception as err:
-            text_input[-1].text = str(err)
+            output.text = str(err)
 
-    def calc6(self, text_input):
+    def calc6(self, text_input, output):
         try:
-            if all(i.text == "" for i in text_input[:-1]): raise Exception("")
-            x = text_input[0].text
-            y = (i.split("=") for i in lb.clr_sp(text_input[1].text, "=").split())
+            if all(i == "" for i in text_input): raise Exception("")
+            x = text_input[0]
+            y = (i.split("=") for i in lb.clr_sp(text_input[1], "=").split())
             y = {i[0]: i[1] for i in y}
             x1 = lb.formul_exe(x, y)
             x2 = ""
             for i in x1: x2 += str(i) + "\n"
-            text_input[-1].text = x2
+            output.text = x2
         except Exception as err:
-            text_input[-1].text = str(err)
+            output.text = str(err)
 
 
 MyApp().run()

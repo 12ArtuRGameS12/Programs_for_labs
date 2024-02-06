@@ -1,24 +1,25 @@
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 
-<MyBoxLayout@BoxLayout>:
-    orientation: "vertical"
-    padding: (50, 20)
-    spacing: 5
 
-<ButtonHome@Button>:
-    text: "Home"
-    on_press:
-        root.parent.parent.parent.current = self.text
+#<MyLabel@Label>:
+#    text_size: [None, None]
+#    text_size: self.size
+#    valign: "center"
+#    halign: "center"
 
 
 ScreenManager:
     transition: NoTransition()
     id: sm
 
-
     Screen:
         name: "Home"
-        MyBoxLayout:
+
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+
             Button:
                 text: "Настройки"
                 on_press:
@@ -48,182 +49,220 @@ ScreenManager:
                 on_press:
                     sm.current = self.text
 
+
     Screen:
         name: "Настройки"
-        MyBoxLayout:
-            ButtonHome:
+
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
 
             BoxLayout:
                 Label:
                     text: "Debug mode"
-                BoxLayout:
-                    GridLayout:
-                        cols: 2
-                        CheckBox:
-                            group: "Настройки CB2"
-                            active: True
-                        CheckBox:
-                            group: "Настройки CB2"
-                            id: debug
+                MyToggleButton:
+                    text: "OFF"
+                    text_down: "ON"
+                    text_normal: "OFF"
+                    on_state: app.dev = True if args[1] == "down" else False
 
-                        Label:
-                            text: "off"
-                            valign: "top"
-                            halign: "center"
-                            text_size: [None, None]
-                            text_size: self.size
-                        Label:
-                            text: "on"
-                            valign: "top"
-                            halign: "center"
-                            text_size: [None, None]
-                            text_size: self.size
+            BoxLayout:
+                Label:
+                    text: "Доверительный интервал"
+                BoxLayout:
+                    spacing: 5
+                    ToggleButton:
+                        group: "interval"
+                        text: "90%"
+                        on_state: app.interval = 1 if args[1] == "down" else app.interval
+                    ToggleButton:
+                        group: "interval"
+                        text: "95%"
+                        state: "down"
+                        on_state: app.interval = 2 if args[1] == "down" else app.interval
+                    ToggleButton:
+                        group: "interval"
+                        text: "99%"
+                        on_state: app.interval = 3 if args[1] == "down" else app.interval
+
 
     Screen:
         name: "Прямые измерения"
-        MyBoxLayout:
-            ButtonHome:
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
 
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
             MyTextInput:
-                hint_text: "Данные: 1.3 2.5 4.74"
-                id: i_pz_0
+                hint_text: "Данные"
+                filt: {*"0123456789., "}
+                id: id_pz_0
             MyTextInput:
                 hint_text: "Точность прибора"
-                id: i_pz_1
-            BoxLayout:
-                orientation: "vertical"
-                Label:
-                    text: "Доверительный интервал"
-                    size_hint: (1, .33)
-                GridLayout:
-                    cols: 3
-                    id: i_pz_2
-
-                    Label:
-                        text: "90%"
-                    Label:
-                        text: "95%"
-                    Label:
-                        text: "99%"
-
-                    CheckBox:
-                        group: "Прямые измерения CB"
-                    CheckBox:
-                        group: "Прямые измерения CB"
-                        active: True
-                    CheckBox:
-                        group: "Прямые измерения CB"
-
+                filt: {*"0123456789.,"}
+                id: id_pz_1
             MyTextInput:
                 hint_text: "Результат"
-                id: i_pz_3
+                id: id_pz_2
             Button:
                 text: "calc"
-                on_press: app.calc1((i_pz_0, i_pz_1, i_pz_2, i_pz_3), debug.active)
+                on_press: app.calc1((id_pz_0.text, id_pz_1.text), id_pz_2)
 
 
 
     Screen:
         name: "МНК"
-        MyBoxLayout:
-            ButtonHome:
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
 
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
             MyTextInput:
                 hint_text: "x"
-                id: i_mnk_0
+                filt: {*"0123456789., "}
+                id: id_mnk_0
             MyTextInput:
                 hint_text: "y"
-                id: i_mnk_1
+                filt: {*"0123456789., "}
+                id: id_mnk_1
 
             GridLayout:
                 cols: 2
-                id: i_mnk_2
+                #:set cc1 1
                 Label:
                     text: "y = ax + b"
                 Label:
                     text: "y = ax"
-
                 CheckBox:
-                    group: "МНК CB"
+                    group: "МНК"
                     active: True
+                    on_active:
+                        cc1 = 1 if args[1] else cc1
                 CheckBox:
-                    group: "МНК CB"
+                    group: "МНК"
+                    on_active:
+                        cc1 = 2 if args[1] else cc1
             MyTextInput:
                 hint_text: "Результат"
-                id: i_mnk_3
+                id: id_mnk_2
             Button:
                 text: "calc"
-                on_press: app.calc2((i_mnk_0, i_mnk_1, i_mnk_2, i_mnk_3), debug.active)
+                on_press: app.calc2((id_mnk_0.text, id_mnk_1.text), cc1, id_mnk_2)
 
 
     Screen:
         name: "Неравноточные измерения"
-        MyBoxLayout:
-            ButtonHome:
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
 
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
             MyTextInput:
                 hint_text: "Среднее значения"
-                id: i_nr_0
+                filt: {*"0123456789., "}
+                id: id_nr_0
             MyTextInput:
                 hint_text: "Погрешность значений"
-                id: i_nr_1
+                filt: {*"0123456789., "}
+                id: id_nr_1
             MyTextInput:
                 hint_text: "Результат"
-                id: i_nr_2
+                id: id_nr_2
             Button:
                 text: "calc"
-                on_press: app.calc3((i_nr_0, i_nr_1, i_nr_2), debug.active)
+                on_press: app.calc3((id_nr_0.text, id_nr_1.text), id_nr_2)
+
 
     Screen:
         name: "Статистика"
-        MyBoxLayout:
-            ButtonHome:
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
 
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
             MyTextInput:
                 hint_text: "x"
-                id: i_st_0
+                filt: {*"0123456789., "}
+                id: id_st_0
             MyTextInput:
                 hint_text: "y"
-                id: i_st_1
+                filt: {*"0123456789., "}
+                id: id_st_1
             MyTextInput:
                 hint_text: "Результат"
-                id: i_st_2
+                id: id_st_2
             Button:
                 text: "calc"
-                on_press: app.calc4((i_st_0, i_st_1, i_st_2))
+                on_press: app.calc4((id_st_0.text, id_st_1.text), id_st_2)
+
 
     Screen:
         name: "Косвенные измерения"
-        MyBoxLayout:
-            ButtonHome:
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
 
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
             MyTextInput:
                 hint_text: "Формула"
-                id: i_cs_0
+                id: id_cs_0
             MyTextInput:
                 hint_text: "Значения"
-                id: i_cs_1
+                id: id_cs_1
             MyTextInput:
                 hint_text: "Результат"
-                id: i_cs_2
+                id: id_cs_2
             Button:
                 text: "calc"
-                on_press: app.calc5((i_cs_0, i_cs_1, i_cs_2))
+                on_press: app.calc5((id_cs_0.text, id_cs_1.text), id_cs_2)
+
+
     Screen:
         name: "Формулы exe"
-        MyBoxLayout:
-            ButtonHome:
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
 
+            Button:
+                text: "Home"
+                on_press:
+                    sm.current = self.text
             MyTextInput:
                 hint_text: "Формула"
-                id: i_fe_0
+                id: id_fe_0
             MyTextInput:
                 hint_text: "Значения"
-                id: i_fe_1
+                id: id_fe_1
             MyTextInput:
                 hint_text: "Результат"
-                id: i_fe_2
+                id: id_fe_2
             Button:
                 text: "calc"
-                on_press: app.calc6((i_fe_0, i_fe_1, i_fe_2))
-
+                on_press: app.calc6((id_fe_0.text, id_fe_1.text), id_fe_2)

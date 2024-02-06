@@ -84,18 +84,18 @@ def sup_rep(text: str, rep: dict[str, str]) -> str:
     return new_text
 
 
-def stu(n: int, a: int = 2) -> float:
+def stu(n: int, interval: int = 2) -> float:
     """Даёт значение Стьюдента
 
     :param n: число степеней свободы
-    :param a: доверительная вероятность(1=90%, 2=95%, 3=99%)
+    :param interval: доверительная вероятность(1=90%, 2=95%, 3=99%)
     :return: значение Стьюдента
     """
 
-    typetest((n, a), (int,), {0: "n", 1: "a"})
+    typetest((n, interval), (int,), {0: "n", 1: "a"})
 
-    if a not in (1, 2, 3):
-        raise ValueError(f"Нету в таблице такой доверительной вероятности как {a}")
+    if interval not in (1, 2, 3):
+        raise ValueError(f"Нету в таблице такой доверительной вероятности как {interval}")
 
     table_students = {
         1: (6.314, 12.706, 63.619),
@@ -135,7 +135,7 @@ def stu(n: int, a: int = 2) -> float:
     }
 
     try:
-        x = table_students[n][a - 1]
+        x = table_students[n][interval - 1]
     except KeyError:
         raise ValueError(f"Нету в таблице такой степени свободы как {n}")
 
@@ -301,6 +301,7 @@ def nerav_izmer(
 def mnc(
         arg1: tuple[int | float, ...] | list[int | float],
         arg2: tuple[int | float, ...] | list[int | float],
+        interval: int = 2,
         mode: int = 1,
         debug: bool = False) -> (
         (tuple[float, tuple[float, float], tuple[float, float]] |
@@ -311,6 +312,7 @@ def mnc(
     :param arg1: значения x
     :param arg2: значения y
     :param mode: 1: y = ax + b, 2: y = ax
+    :param interval: доверительная вероятность(1=90%, 2=95%, 3=99%
     :param debug: режим разработчика
     :return: R, (a, da), (b, db)
     """
@@ -338,15 +340,15 @@ def mnc(
         mncc1["sum_q"] = sum(mncc1["q"])
         mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 2) * stt1["sumXX2"])) ** (1 / 2)
         mncc1["sb"] = (mncc1["sum_q"] / stt1["nX"] / (stt1["nX"] - 2) + stt1["srX"] ** 2 * mncc1["sa"]) ** (1 / 2)
-        mncc1["da"] = stu(stt1["nX"] - 2) * mncc1["sa"]
-        mncc1["db"] = stu(stt1["nX"] - 2) * mncc1["sb"]
+        mncc1["da"] = stu(stt1["nX"] - 2, interval) * mncc1["sa"]
+        mncc1["db"] = stu(stt1["nX"] - 2, interval) * mncc1["sb"]
     else:
         mncc1["r0"] = (stt1["sumXXYY"]) / ((stt1["sumXX2"] ** (1 / 2)) * (stt1["sumYY2"] ** (1 / 2)))
         mncc1["a0"] = stt1["sumXY"] / stt1["sumX2"]
         mncc1["q"] = list(map(lambda x, y: (mncc1["a0"] * x - y) ** 2, arg1, arg2))
         mncc1["sum_q"] = sum(mncc1["q"])
         mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 1) * stt1["sumXX2"])) ** (1 / 2)
-        mncc1["da"] = stu(stt1["nX"] - 1) * mncc1["sa"]
+        mncc1["da"] = stu(stt1["nX"] - 1, interval) * mncc1["sa"]
         return mncc1["r0"], (mncc1["a0"], mncc1["da"])
 
     if debug:
