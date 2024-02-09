@@ -10,7 +10,6 @@
 
 ScreenManager:
     transition: NoTransition()
-    id: sm
 
     Screen:
         name: "Home"
@@ -23,31 +22,31 @@ ScreenManager:
             Button:
                 text: "Настройки"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             Button:
                 text: "Прямые измерения"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             Button:
                 text: "МНК"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             Button:
                 text: "Неравноточные измерения"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             Button:
                 text: "Статистика"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             Button:
                 text: "Косвенные измерения"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             Button:
                 text: "Формулы exe"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
 
 
     Screen:
@@ -61,7 +60,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
 
             BoxLayout:
                 Label:
@@ -102,7 +101,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             MyTextInput:
                 hint_text: "Данные"
                 filt: {*"0123456789., "}
@@ -130,7 +129,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             MyTextInput:
                 hint_text: "x"
                 filt: {*"0123456789., "}
@@ -174,7 +173,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             MyTextInput:
                 hint_text: "Среднее значения"
                 filt: {*"0123456789., "}
@@ -201,7 +200,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             MyTextInput:
                 hint_text: "x"
                 filt: {*"0123456789., "}
@@ -228,7 +227,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             MyTextInput:
                 hint_text: "Формула"
                 id: id_cs_0
@@ -253,7 +252,7 @@ ScreenManager:
             Button:
                 text: "Home"
                 on_press:
-                    sm.current = self.text
+                    root.current = self.text
             MyTextInput:
                 hint_text: "Формула"
                 id: id_fe_0
