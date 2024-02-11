@@ -1,11 +1,11 @@
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 
 
-#<MyLabel@Label>:
-#    text_size: [None, None]
-#    text_size: self.size
-#    valign: "center"
-#    halign: "center"
+<MyLabel@Label>:
+    text_size: [None, None]
+    text_size: self.size
+    valign: "center"
+    halign: "center"
 
 
 ScreenManager:
@@ -97,11 +97,17 @@ ScreenManager:
             orientation: "vertical"
             padding: (50, 20)
             spacing: 5
+            BoxLayout:
+                Button:
+                    text: "Home"
+                    on_press:
+                        root.current = self.text
+                Button:
+                    text: "Прямые измерения guide"
+                    on_press:
+                        app.last = self.parent.parent.parent.name
+                        root.current = self.text
 
-            Button:
-                text: "Home"
-                on_press:
-                    root.current = self.text
             MyTextInput:
                 hint_text: "Данные"
                 filt: {*"0123456789., "}
@@ -110,13 +116,27 @@ ScreenManager:
                 hint_text: "Точность прибора"
                 filt: {*"0123456789.,"}
                 id: id_pz_1
-            MyTextInput:
+            MyTextInput2:
                 hint_text: "Результат"
                 id: id_pz_2
             Button:
                 text: "calc"
                 on_press: app.calc1((id_pz_0.text, id_pz_1.text), id_pz_2)
 
+
+    Screen:
+        name: "Прямые измерения guide"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+            Button:
+                text: "Назад"
+                size_hint: (1, 0.2)
+                on_press:
+                    root.current = app.last
+            MyLabel:
+                text: "Прямые измерения - это n раз меришь одно значение.\n\nДанные - экспериментальные данные через пробел.\nНапример: '1.1 1.2 1.0' или '1,1 1,2 1,0'.\n\nТочность прибора.\nНапример: '0.1' или '0,1.\n\nРезультат - средние значение и дельта."
 
 
     Screen:
@@ -126,10 +146,16 @@ ScreenManager:
             padding: (50, 20)
             spacing: 5
 
-            Button:
-                text: "Home"
-                on_press:
-                    root.current = self.text
+            BoxLayout:
+                Button:
+                    text: "Home"
+                    on_press:
+                        root.current = self.text
+                Button:
+                    text: "МНК guide"
+                    on_press:
+                        app.last = self.parent.parent.parent.name
+                        root.current = self.text
             MyTextInput:
                 hint_text: "x"
                 filt: {*"0123456789., "}
@@ -155,12 +181,27 @@ ScreenManager:
                     group: "МНК"
                     on_active:
                         cc1 = 2 if args[1] else cc1
-            MyTextInput:
+            MyTextInput2:
                 hint_text: "Результат"
                 id: id_mnk_2
             Button:
                 text: "calc"
                 on_press: app.calc2((id_mnk_0.text, id_mnk_1.text), cc1, id_mnk_2)
+
+
+    Screen:
+        name: "МНК guide"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+            Button:
+                text: "Назад"
+                size_hint: (1, 0.2)
+                on_press:
+                    root.current = app.last
+            MyLabel:
+                text: "МНК - это метод наименьших квадратов, позволяющий находить коэффициенты (линейной) функции в зависимости Y от X.\n\nx и y - экспериментальные данные через пробел.\nНапример: '1.1 1.2 1.0' или '1,1 1,2 1,0'.\n\nРезультат - коэффициент корреляции, коэффициенты 'a' 'b' и их дельта."
 
 
     Screen:
@@ -170,10 +211,16 @@ ScreenManager:
             padding: (50, 20)
             spacing: 5
 
-            Button:
-                text: "Home"
-                on_press:
-                    root.current = self.text
+            BoxLayout:
+                Button:
+                    text: "Home"
+                    on_press:
+                        root.current = self.text
+                Button:
+                    text: "Неравноточные измерения guide"
+                    on_press:
+                        app.last = self.parent.parent.parent.name
+                        root.current = self.text
             MyTextInput:
                 hint_text: "Среднее значения"
                 filt: {*"0123456789., "}
@@ -182,12 +229,27 @@ ScreenManager:
                 hint_text: "Погрешность значений"
                 filt: {*"0123456789., "}
                 id: id_nr_1
-            MyTextInput:
+            MyTextInput2:
                 hint_text: "Результат"
                 id: id_nr_2
             Button:
                 text: "calc"
                 on_press: app.calc3((id_nr_0.text, id_nr_1.text), id_nr_2)
+
+
+    Screen:
+        name: "Неравноточные измерения guide"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+            Button:
+                text: "Назад"
+                size_hint: (1, 0.2)
+                on_press:
+                    root.current = app.last
+            MyLabel:
+                text: "Неравноточные измерения - это как прямые измерения, только для тех случае, когда эксперимент проводился в разных условия, но значения должны быть одинаковыми.\n\nСреднее значения и Погрешность значений - экспериментальные данные через пробел.\nНапример: '1.1 1.2 1.0' или '1,1 1,2 1,0'.\n\nРезультат - средние значение и дельта."
 
 
     Screen:
@@ -197,10 +259,16 @@ ScreenManager:
             padding: (50, 20)
             spacing: 5
 
-            Button:
-                text: "Home"
-                on_press:
-                    root.current = self.text
+            BoxLayout:
+                Button:
+                    text: "Home"
+                    on_press:
+                        root.current = self.text
+                Button:
+                    text: "Статистика guide"
+                    on_press:
+                        app.last = self.parent.parent.parent.name
+                        root.current = self.text
             MyTextInput:
                 hint_text: "x"
                 filt: {*"0123456789., "}
@@ -209,12 +277,27 @@ ScreenManager:
                 hint_text: "y"
                 filt: {*"0123456789., "}
                 id: id_st_1
-            MyTextInput:
+            MyTextInput2:
                 hint_text: "Результат"
                 id: id_st_2
             Button:
                 text: "calc"
                 on_press: app.calc4((id_st_0.text, id_st_1.text), id_st_2)
+
+
+    Screen:
+        name: "Статистика guide"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+            Button:
+                text: "Назад"
+                size_hint: (1, 0.2)
+                on_press:
+                    root.current = app.last
+            MyLabel:
+                text: "Статистика - промежуточные вычисления.\n\nx и y - экспериментальные данные через пробел.\nНапример: '1.1 1.2 1.0' или '1,1 1,2 1,0.'\n\nРезультат - \n nX = количество элементов \n sumX = сумма X \n srX = sumX / nX \n XX = Xi - srX \n sumXX = сумма (Xi - srX) \n XX2 = (Xi - srX) ** 2 \n sumXX2 = сумма (Xi - srX) ** 2 \n s0X = (sumXX2 / {nX * [nX - 1]}) ** (1/2) \n X2 = Xi ** 2 \n sumX2 = сумма Xi ** 2 \n XY = Xi * Yi \n sumXY = сумма Xi * Yi \n XXYY = (Xi - srX) * (Yi - srY) \n sumXXYY = сумма (Xi - srX) * (Yi - srY)"
 
 
     Screen:
@@ -224,22 +307,43 @@ ScreenManager:
             padding: (50, 20)
             spacing: 5
 
-            Button:
-                text: "Home"
-                on_press:
-                    root.current = self.text
+            BoxLayout:
+                Button:
+                    text: "Home"
+                    on_press:
+                        root.current = self.text
+                Button:
+                    text: "Косвенные измерения guide"
+                    on_press:
+                        app.last = self.parent.parent.parent.name
+                        root.current = self.text
             MyTextInput:
                 hint_text: "Формула"
                 id: id_cs_0
             MyTextInput:
                 hint_text: "Значения"
                 id: id_cs_1
-            MyTextInput:
+            MyTextInput2:
                 hint_text: "Результат"
                 id: id_cs_2
             Button:
                 text: "calc"
                 on_press: app.calc5((id_cs_0.text, id_cs_1.text), id_cs_2)
+
+
+    Screen:
+        name: "Косвенные измерения guide"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+            Button:
+                text: "Назад"
+                size_hint: (1, 0.2)
+                on_press:
+                    root.current = app.last
+            MyLabel:
+                text: "Косвенные измерения - дельта значение от формулы.\n\nФормула - использует библиотеку sympy, поэтому пишите формулу по стандарту python и этой библиотеки.\nНапример: 'log(piu, g*5) + FG**2'.\n\nЗначения - список переменных через пробел которые имеют погрешность.\nНапример: 'piu g FG'.\n\nРезультат - погрешность формулы."
 
 
     Screen:
@@ -249,19 +353,40 @@ ScreenManager:
             padding: (50, 20)
             spacing: 5
 
-            Button:
-                text: "Home"
-                on_press:
-                    root.current = self.text
+            BoxLayout:
+                Button:
+                    text: "Home"
+                    on_press:
+                        root.current = self.text
+                Button:
+                    text: "Формулы exe guide"
+                    on_press:
+                        app.last = self.parent.parent.parent.name
+                        root.current = self.text
             MyTextInput:
                 hint_text: "Формула"
                 id: id_fe_0
             MyTextInput:
                 hint_text: "Значения"
                 id: id_fe_1
-            MyTextInput:
+            MyTextInput2:
                 hint_text: "Результат"
                 id: id_fe_2
             Button:
                 text: "calc"
                 on_press: app.calc6((id_fe_0.text, id_fe_1.text), id_fe_2)
+
+
+    Screen:
+        name: "Формулы exe guide"
+        BoxLayout:
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+            Button:
+                text: "Назад"
+                size_hint: (1, 0.2)
+                on_press:
+                    root.current = app.last
+            MyLabel:
+                text: "Формулы exe - напиши формулу и чему равны его переменные.\n\nФормула - использует библиотеку sympy, поэтому пишите формулу по стандарту python и этой библиотеки.\nНапример: 'log(piu, g*5) + FG**2'.\n\nЗначения - имя переменной и чему ровняется(необязательно перечислять все значения)\nНапример: 'piu=7 g=66 FG=H*g H=1.6'\n\nРезультат - числовой(если возможно) и символьный результат формулы после подстановки значений."

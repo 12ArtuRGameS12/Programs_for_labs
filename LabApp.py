@@ -55,6 +55,11 @@ class MyTextInput(TextInputFixed):
         self._select_word(delimiters=u' :;!?\'"<>()[]{}')
 
 
+class MyTextInput2(MyTextInput):
+    def create_keyboard(self, *args):
+        pass
+
+
 class MyToggleButton(ToggleButton):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -81,6 +86,7 @@ class MyApp(App):
         super().__init__(**kwargs)
         self.dev = False
         self.interval = 2
+        self.last = "Home"
 
     def build(self):
         Window.bind(on_keyboard=self.Android_back_click)
@@ -169,7 +175,6 @@ class MyApp(App):
 
     def calc4(self, text_input, output):
         try:
-            print(text_input, list(i == "" for i in text_input), all(i == "" for i in text_input))
             if all(i == "" for i in text_input): raise Exception("")
             x = clear(text_input[0].replace(",", "."))
 
