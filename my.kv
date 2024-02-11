@@ -167,7 +167,6 @@ ScreenManager:
 
             GridLayout:
                 cols: 2
-                #:set cc1 1
                 Label:
                     text: "y = ax + b"
                 Label:
@@ -176,17 +175,17 @@ ScreenManager:
                     group: "МНК"
                     active: True
                     on_active:
-                        cc1 = 1 if args[1] else cc1
+                        app.cc1 = 1 if args[1] else app.cc1
                 CheckBox:
                     group: "МНК"
                     on_active:
-                        cc1 = 2 if args[1] else cc1
+                        app.cc1 = 2 if args[1] else app.cc1
             MyTextInput2:
                 hint_text: "Результат"
                 id: id_mnk_2
             Button:
                 text: "calc"
-                on_press: app.calc2((id_mnk_0.text, id_mnk_1.text), cc1, id_mnk_2)
+                on_press: app.calc2((id_mnk_0.text, id_mnk_1.text), app.cc1, id_mnk_2)
 
 
     Screen:

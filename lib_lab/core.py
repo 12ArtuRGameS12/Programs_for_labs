@@ -6,7 +6,8 @@ from .primary_calculations import *
 def prim_izmer(
         data: tuple[int | float, ...] | list[int | float],
         accuracy: int | float,
-        interval: int = 2, debug: bool = False) -> tuple[float, float] | dict[str, float]:
+        interval: int = 2,
+        debug: bool = False) -> tuple[float, float] | dict[str, float]:
     """
     Прямые измерения
 
@@ -120,12 +121,14 @@ def mnc(
         mncc1["sum_q"] = sum(mncc1["q"])
         mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 1) * stt1["sumXX2"])) ** (1 / 2)
         mncc1["da"] = stu(stt1["nX"] - 1, interval) * mncc1["sa"]
-        return mncc1["r0"], (mncc1["a0"], mncc1["da"])
 
     if debug:
         return mncc1
     else:
-        return mncc1["r0"], (mncc1["a0"], mncc1["da"]), (mncc1["b0"], mncc1["db"])
+        if mode == 1:
+            return mncc1["r0"], (mncc1["a0"], mncc1["da"]), (mncc1["b0"], mncc1["db"])
+        elif mode == 2:
+            return mncc1["r0"], (mncc1["a0"], mncc1["da"])
 
 
 def cosn_izmer_formula(formula: str, *varabels: str) -> str:

@@ -87,6 +87,7 @@ class MyApp(App):
         self.dev = False
         self.interval = 2
         self.last = "Home"
+        self.cc1 = 1
 
     def build(self):
         Window.bind(on_keyboard=self.Android_back_click)
@@ -152,7 +153,7 @@ class MyApp(App):
                     x2 = f"y=ax\nR = {x1[0]}\na = {x1[1][0]}\nda = {x1[1][1]}"
             else:
                 x2 = ""
-                for i in x1: x2 += i + ": " + str(x1[i]) + "\n"
+                for i in x1: x2 += str(i) + ": " + str(x1[i]) + "\n"
             output.text = x2
         except Exception as err:
             output.text = str(err)
