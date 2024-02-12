@@ -26,7 +26,7 @@ class Test_core(TestCase):
     def test_mnc(self):
         self.assertEqual(mnc([1, 2, 3], [0.4, 0.5, 0.6]), (0.9999999999999999,
                                                            (0.09999999999999994, 9.974797390018023e-16),
-                                                           (0.3000000000000001, 2.2515752320326228e-07)))
+                                                           (0.3000000000000001, 2.1548025134620768e-15)))
         self.assertEqual(mnc([1, 2, 3], [1, 2, 3], 2, 2), (0.9999999999999998, (1.0, 0.0)))
 
         self.assertRaisesRegex(TypeError, "arg1 - str не tuple или list", mnc, "1234", [1, 2, 3])
@@ -37,18 +37,13 @@ class Test_core(TestCase):
         self.assertEqual(cosn_izmer_formula("a**3 + b*2", "a", "b"), "sqrt(9*a**4*da**2 + 4*db**2)")
         self.assertEqual(cosn_izmer_formula("123", "a", "b"), "0")
 
-        self.assertRaisesRegex(TypeError, "123 - int не str", cosn_izmer_formula, 123, "1")
+        self.assertRaisesRegex(TypeError, "formula - int не str", cosn_izmer_formula, 123, "1")
         self.assertRaisesRegex(TypeError, "2 - int не str", cosn_izmer_formula, "a*5", "b", 1234)
 
-    def test_convert2number(self):
-        self.assertEqual(convert2number("12.3"), 12.3)
-
-        self.assertRaisesRegex(TypeError, "num_str - int не str", convert2number, 1234)
-
-    def test_formul_exe(self):
-        self.assertEqual(formul_exe("sqrt(9*a**4*da**2 + 4*db**2)", {"a": 4, "da": 2, "b": 5, "db": 1}),
+    def test_formula_exe(self):
+        self.assertEqual(formula_exe("sqrt(9*a**4*da**2 + 4*db**2)", {"a": 4, "da": 2, "b": 5, "db": 1}),
                          (96.0208310732624, "2*sqrt(2305)"))
 
-        self.assertRaisesRegex(TypeError, "formul - int не str", formul_exe, 1234, {"a": 5})
-        self.assertRaisesRegex(TypeError, "varabels - int не dict", formul_exe, "a+b", 1234)
-        self.assertRaisesRegex(TypeError, "1 - int не str", formul_exe, "a+b", {1234: 5})
+        self.assertRaisesRegex(TypeError, "formula - int не str", formula_exe, 1234, {"a": 5})
+        self.assertRaisesRegex(TypeError, "varabels - int не dict", formula_exe, "a+b", 1234)
+        self.assertRaisesRegex(TypeError, "1 - int не str", formula_exe, "a+b", {1234: 5})

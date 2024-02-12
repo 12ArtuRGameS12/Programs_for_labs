@@ -23,3 +23,8 @@ class Test_tools(TestCase):
         self.assertEqual(rotate([[1, 2, 3, 4], [5, 6, 7, 8]]), [[1, 5], [2, 6], [3, 7], [4, 8]])
         self.assertEqual(rotate(((1, 2, 3, 4), (5, 6, 7, 8))), ((1, 5), (2, 6), (3, 7), (4, 8)))
         self.assertRaisesRegex(TypeError, "tabel - int не tuple или list", rotate, 1234)
+
+    def test_convert2number(self):
+        self.assertEqual(convert2number("12.3"), 12.3)
+
+        self.assertRaisesRegex(TypeError, "num_str - int не str", convert2number, 1234)

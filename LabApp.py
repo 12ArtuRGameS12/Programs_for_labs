@@ -47,8 +47,11 @@ class MyTextInput(TextInputFixed):
 
     def insert_text(self, substring, from_undo=False):
         if self.filt:
-            if substring not in self.filt:
-                substring = ""
+            x = ""
+            for i in substring:
+                if i in self.filt:
+                    x += i
+            substring = x
         return super().insert_text(substring, from_undo=from_undo)
 
     def on_double_tap(self):
@@ -207,7 +210,7 @@ class MyApp(App):
             x = text_input[0]
             y = (i.split("=") for i in lb.clr_sp(text_input[1], "=").split())
             y = {i[0]: i[1] for i in y}
-            x1 = lb.formul_exe(x, y)
+            x1 = lb.formula_exe(x, y)
             x2 = ""
             for i in x1: x2 += str(i) + "\n"
             output.text = x2

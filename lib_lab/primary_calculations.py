@@ -106,31 +106,28 @@ def stat(
         if arg1_len != arg2_len:
             raise ValueError(f"Длина arg1 - {arg1_len} != arg2 - {arg2_len}")
 
-    def _stat1(arg: tuple[int | float, ...] | list[int | float], name: str) -> dict[str, int | float | list]:
+    def _stat1(arg: tuple[int | float, ...] | list[int | float],
+               name: str) -> dict[str, int | float | list]:
 
-        stt1: dict[str, int | float | list] = dict()
-        stt1[f"n{name}"] = len(arg)
-        stt1[f"sum{name}"] = sum(arg)
-        stt1[f"sr{name}"] = stt1[f"sum{name}"] / stt1[f"n{name}"]
-        stt1[f"{name}{name}"] = list(map(lambda x: x - stt1[f"sr{name}"], arg), )
-        stt1[f"sum{name}{name}"] = sum(stt1[f"{name}{name}"])
-        stt1[f"{name}{name}2"] = list(map(lambda x: (x - stt1[f"sr{name}"]) ** 2, arg), )
-        stt1[f"sum{name}{name}2"] = sum(stt1[f"{name}{name}2"])
-        stt1[f"s0{name}"] = \
-            (stt1[f"sum{name}{name}2"] / (stt1[f"n{name}"] * (stt1[f"n{name}"] - 1))) ** (1 / 2)
-        stt1[f"{name}2"] = list(map(lambda x: x ** 2, arg))
-        stt1[f"sum{name}2"] = sum(stt1[f"{name}2"])
-        return stt1
+        z: dict[str, int | float | list] = dict()
+        z[f"n{name}"] = len(arg)
+        z[f"sum{name}"] = sum(arg)
+        z[f"sr{name}"] = z[f"sum{name}"] / z[f"n{name}"]
+        z[f"{name}{name}"] = list(map(lambda x: x - z[f"sr{name}"], arg), )
+        z[f"sum{name}{name}"] = sum(z[f"{name}{name}"])
+        z[f"{name}{name}2"] = list(map(lambda x: (x - z[f"sr{name}"]) ** 2, arg), )
+        z[f"sum{name}{name}2"] = sum(z[f"{name}{name}2"])
+        z[f"s0{name}"] = (z[f"sum{name}{name}2"] / (z[f"n{name}"] * (z[f"n{name}"] - 1))) ** (1 / 2)
+        z[f"{name}2"] = list(map(lambda x: x ** 2, arg))
+        z[f"sum{name}2"] = sum(z[f"{name}2"])
+        return z
 
     if not arg2:
-
         return _stat1(arg1, "X")
-
     else:
         stt = _stat1(arg1, "X") | _stat1(arg2, "Y")
         stt["XY"] = list(map(lambda x, y: x * y, arg1, arg2))
         stt["sumXY"] = sum(stt["XY"])
         stt["XXYY"] = list(map(lambda x, y: x * y, stt["XX"], stt["YY"]))
         stt["sumXXYY"] = sum(stt["XXYY"])
-
         return stt

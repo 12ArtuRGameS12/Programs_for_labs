@@ -85,3 +85,20 @@ def rotate(tabel: tuple | list) -> tuple | list:
         x = tuple([i for i in zip(*tabel)])
 
     return x
+
+
+def convert2number(num_str: str) -> int | float:
+    """Конвертируя строку в число
+
+    :param num_str: число в виде строки
+    :return: число в виде int или float
+    """
+
+    typetest((num_str,), (str,), {0: "num_str"})
+
+    try:
+        x = int(num_str)
+    except ValueError:
+        x = float(num_str)
+
+    return x

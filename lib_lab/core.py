@@ -1,5 +1,4 @@
 # from typing import Any, Callable
-from .tools import *
 from .primary_calculations import *
 
 
@@ -27,16 +26,16 @@ def prim_izmer(
     typetest((accuracy,), (int, float), {0: "accuracy"})
     typetest((debug,), (bool,), {0: "debug"})
 
-    izmer: dict[str, int | float] = dict()
+    z: dict[str, int | float] = dict()
     x = stat(data)
-    izmer["slp"] = stu(x["nX"] - 1, interval) * x["s0X"]
-    izmer["prp"] = stu(9999, interval) * accuracy / 3
-    izmer["obp"] = (izmer["slp"] ** 2 + izmer["prp"] ** 2) ** (1 / 2)
+    z["slp"] = stu(x["nX"] - 1, interval) * x["s0X"]
+    z["prp"] = stu(9999, interval) * accuracy / 3
+    z["obp"] = (z["slp"] ** 2 + z["prp"] ** 2) ** (1 / 2)
 
     if debug:
-        return izmer
+        return z
     else:
-        return x["srX"], izmer["obp"]
+        return x["srX"], z["obp"]
 
 
 def nerav_izmer(
@@ -56,18 +55,18 @@ def nerav_izmer(
     typetest(errors, (int, float))
     typetest((debug,), (bool,), {0: "debug"})
 
-    izmer: dict[str, int | float | list] = dict()
-    izmer["w"] = list(map(lambda x: 1 / x ** 2, errors))
-    izmer["x0"] = list(map(lambda x, y: x * y, izmer["w"], data))
-    izmer["sum_x0"] = sum(izmer["x0"])
-    izmer["sum_w"] = sum(izmer["w"])
-    izmer["value"] = izmer["sum_x0"] / izmer["sum_w"]
-    izmer["data_len"] = len(data)
-    izmer["err"] = (izmer["data_len"] / izmer["sum_w"]) ** (1 / 2)
+    z: dict[str, int | float | list] = dict()
+    z["w"] = list(map(lambda x: 1 / x ** 2, errors))
+    z["wa"] = list(map(lambda x, y: x * y, data, z["w"]))
+    z["sum_wa"] = sum(z["wa"])
+    z["sum_w"] = sum(z["w"])
+    z["value"] = z["sum_wa"] / z["sum_w"]
+    z["data_len"] = len(data)
+    z["err"] = (z["data_len"] / z["sum_w"]) ** (1 / 2)
     if debug:
-        return izmer
+        return z
     else:
-        return izmer["value"], izmer["err"]
+        return z["value"], z["err"]
 
 
 def mnc(
@@ -84,7 +83,7 @@ def mnc(
     :param arg1: значения x
     :param arg2: значения y
     :param mode: 1: y = ax + b, 2: y = ax
-    :param interval: доверительная вероятность(1=90%, 2=95%, 3=99%
+    :param interval: доверительная вероятность(1=90%, 2=95%, 3=99%)
     :param debug: режим разработчика
     :return: R, (a, da), (b, db)
     """
@@ -96,39 +95,40 @@ def mnc(
         raise ValueError(f"Нету такой формулы {mode}")
     typetest((debug,), (bool,), {0: "debug"})
 
-    stt1 = stat(arg1, arg2)
-    mncc1: dict[str, int | float | list] = dict()
+    st = stat(arg1, arg2)
+    z: dict[str, int | float | list] = dict()
 
     if mode == 1:
         if (len(arg1) < 3) or (len(arg2) < 3):
             raise ValueError("Меньше трёх нельзя в режиме 1")
 
-        mncc1["a0"] = (stt1["nX"] * stt1["sumXY"] - stt1["sumX"] * stt1["sumY"]) / (
-                stt1["nX"] * stt1["sumX2"] - stt1["sumX"] ** 2)
-        mncc1["b0"] = (stt1["sumX2"] * stt1["sumY"] - stt1["sumX"] * stt1["sumXY"]) / (
-                stt1["nX"] * stt1["sumX2"] - stt1["sumX"] ** 2)
-        mncc1["r0"] = (stt1["sumXXYY"]) / ((stt1["sumXX2"] ** (1 / 2)) * (stt1["sumYY2"] ** (1 / 2)))
-        mncc1["q"] = list(map(lambda x, y: (mncc1["a0"] * x + mncc1["b0"] - y) ** 2, arg1, arg2))
-        mncc1["sum_q"] = sum(mncc1["q"])
-        mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 2) * stt1["sumXX2"])) ** (1 / 2)
-        mncc1["sb"] = (mncc1["sum_q"] / stt1["nX"] / (stt1["nX"] - 2) + stt1["srX"] ** 2 * mncc1["sa"]) ** (1 / 2)
-        mncc1["da"] = stu(stt1["nX"] - 2, interval) * mncc1["sa"]
-        mncc1["db"] = stu(stt1["nX"] - 2, interval) * mncc1["sb"]
+        z["a0"] = (st["nX"] * st["sumXY"] - st["sumX"] * st["sumY"]) / (
+                st["nX"] * st["sumX2"] - st["sumX"] ** 2)
+        z["b0"] = (st["sumX2"] * st["sumY"] - st["sumX"] * st["sumXY"]) / (
+                st["nX"] * st["sumX2"] - st["sumX"] ** 2)
+
+        z["r0"] = (st["sumXXYY"]) / (st["sumXX2"] ** (1 / 2) * st["sumYY2"] ** (1 / 2))
+        z["q"] = list(map(lambda x, y: (z["a0"] * x + z["b0"] - y) ** 2, arg1, arg2))
+        z["sum_q"] = sum(z["q"])
+        z["sa"] = (z["sum_q"] / ((st["nX"] - 2) * st["sumXX2"])) ** (1 / 2)
+        z["sb"] = (z["sum_q"] / st["nX"] / (st["nX"] - 2) + st["srX"] ** 2 * z["sa"] ** 2) ** (1 / 2)
+        z["da"] = stu(st["nX"] - 2, interval) * z["sa"]
+        z["db"] = stu(st["nX"] - 2, interval) * z["sb"]
     else:
-        mncc1["r0"] = (stt1["sumXXYY"]) / ((stt1["sumXX2"] ** (1 / 2)) * (stt1["sumYY2"] ** (1 / 2)))
-        mncc1["a0"] = stt1["sumXY"] / stt1["sumX2"]
-        mncc1["q"] = list(map(lambda x, y: (mncc1["a0"] * x - y) ** 2, arg1, arg2))
-        mncc1["sum_q"] = sum(mncc1["q"])
-        mncc1["sa"] = (mncc1["sum_q"] / ((stt1["nX"] - 1) * stt1["sumXX2"])) ** (1 / 2)
-        mncc1["da"] = stu(stt1["nX"] - 1, interval) * mncc1["sa"]
+        z["a0"] = st["sumXY"] / st["sumX2"]
+        z["r0"] = (st["sumXXYY"]) / (st["sumXX2"] ** (1 / 2) * st["sumYY2"] ** (1 / 2))
+        z["q"] = list(map(lambda x, y: (z["a0"] * x - y) ** 2, arg1, arg2))
+        z["sum_q"] = sum(z["q"])
+        z["sa"] = (z["sum_q"] / ((st["nX"] - 1) * st["sumXX2"])) ** (1 / 2)
+        z["da"] = stu(st["nX"] - 1, interval) * z["sa"]
 
     if debug:
-        return mncc1
+        return z
     else:
         if mode == 1:
-            return mncc1["r0"], (mncc1["a0"], mncc1["da"]), (mncc1["b0"], mncc1["db"])
+            return z["r0"], (z["a0"], z["da"]), (z["b0"], z["db"])
         elif mode == 2:
-            return mncc1["r0"], (mncc1["a0"], mncc1["da"])
+            return z["r0"], (z["a0"], z["da"])
 
 
 def cosn_izmer_formula(formula: str, *varabels: str) -> str:
@@ -139,7 +139,7 @@ def cosn_izmer_formula(formula: str, *varabels: str) -> str:
     :return: дельта формулы
     """
 
-    typetest((formula, *varabels), (str,), {0: formula})
+    typetest((formula, *varabels), (str,), {0: "formula"})
 
     import sympy
     x = sympy.sympify(0)
@@ -149,24 +149,7 @@ def cosn_izmer_formula(formula: str, *varabels: str) -> str:
     return x.__str__()
 
 
-def convert2number(num_str: str) -> int | float:
-    """Конвертируя строку в число
-
-    :param num_str: число в виде строки
-    :return: число в виде int или float
-    """
-
-    typetest((num_str,), (str,), {0: "num_str"})
-
-    try:
-        x = int(num_str)
-    except ValueError:
-        x = float(num_str)
-
-    return x
-
-
-def formul_exe(
+def formula_exe(
         formula: str,
         varabels: dict[str, int | float | str]) -> tuple[int, str] | tuple[float, str]:
     """Счёт значения формулы
@@ -177,7 +160,7 @@ def formul_exe(
     """
 
     typetest((varabels,), (dict,), {0: "varabels"})
-    typetest((formula, *varabels), (str,), {0: "formul"})
+    typetest((formula, *varabels), (str,), {0: "formula"})
     typetest(([varabels[i] for i in varabels]), (int, float, str))
 
     import sympy
