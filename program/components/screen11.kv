@@ -1,0 +1,29 @@
+<Screen11@Screen>:
+    name: "Косвенные измерения"
+    BoxLayout:
+        orientation: "vertical"
+        padding: (50, 20)
+        spacing: 5
+
+        BoxLayout:
+            Button:
+                text: "Home"
+                on_press:
+                    app.root.current = self.text
+            Button:
+                text: "Косвенные измерения guide"
+                on_press:
+                    app.last = self.parent.parent.parent.name
+                    app.root.current = self.text
+        MyTextInput:
+            hint_text: "Формула"
+            id: id_cs_0
+        MyTextInput:
+            hint_text: "Значения"
+            id: id_cs_1
+        MyTextInput2:
+            hint_text: "Результат"
+            id: id_cs_2
+        Button:
+            text: "calc"
+            on_press: app.calc5((id_cs_0.text, id_cs_1.text), id_cs_2)

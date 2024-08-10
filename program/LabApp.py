@@ -218,6 +218,3 @@ class MyApp(MDApp):
             output.text = x2
         except Exception as err:
             output.text = str(err)
-
-
-MyApp().run()

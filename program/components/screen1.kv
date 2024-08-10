@@ -1,0 +1,36 @@
+<Screen1@Screen>:
+    name: "Home"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: (50, 20)
+        spacing: 5
+
+        Button:
+            text: "Настройки"
+            on_press:
+                app.root.current = self.text
+        Button:
+            text: "Прямые измерения"
+            on_press:
+                app.root.current = self.text
+        Button:
+            text: "МНК"
+            on_press:
+                app.root.current = self.text
+        Button:
+            text: "Неравноточные измерения"
+            on_press:
+                app.root.current = self.text
+        Button:
+            text: "Статистика"
+            on_press:
+                app.root.current = self.text
+        Button:
+            text: "Косвенные измерения"
+            on_press:
+                app.root.current = self.text
+        Button:
+            text: "Формулы exe"
+            on_press:
+                app.root.current = self.text

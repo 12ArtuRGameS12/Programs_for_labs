@@ -1,0 +1,29 @@
+<Screen13@Screen>:
+    name: "Формулы exe"
+    BoxLayout:
+        orientation: "vertical"
+        padding: (50, 20)
+        spacing: 5
+
+        BoxLayout:
+            Button:
+                text: "Home"
+                on_press:
+                    app.root.current = self.text
+            Button:
+                text: "Формулы exe guide"
+                on_press:
+                    app.last = self.parent.parent.parent.name
+                    app.root.current = self.text
+        MyTextInput:
+            hint_text: "Формула"
+            id: id_fe_0
+        MyTextInput:
+            hint_text: "Значения"
+            id: id_fe_1
+        MyTextInput2:
+            hint_text: "Результат"
+            id: id_fe_2
+        Button:
+            text: "calc"
+            on_press: app.calc6((id_fe_0.text, id_fe_1.text), id_fe_2)

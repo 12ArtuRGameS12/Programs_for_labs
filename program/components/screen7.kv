@@ -1,0 +1,31 @@
+<Screen7@Screen>:
+    name: "Неравноточные измерения"
+    BoxLayout:
+        orientation: "vertical"
+        padding: (50, 20)
+        spacing: 5
+
+        BoxLayout:
+            Button:
+                text: "Home"
+                on_press:
+                    app.root.current = self.text
+            Button:
+                text: "Неравноточные измерения guide"
+                on_press:
+                    app.last = self.parent.parent.parent.name
+                    app.root.current = self.text
+        MyTextInput:
+            hint_text: "Среднее значения"
+            filt: {*"0123456789., "}
+            id: id_nr_0
+        MyTextInput:
+            hint_text: "Погрешность значений"
+            filt: {*"0123456789., "}
+            id: id_nr_1
+        MyTextInput2:
+            hint_text: "Результат"
+            id: id_nr_2
+        Button:
+            text: "calc"
+            on_press: app.calc3((id_nr_0.text, id_nr_1.text), id_nr_2)

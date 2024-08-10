@@ -1,0 +1,40 @@
+<Screen2@Screen>:
+    name: "Настройки"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: (50, 20)
+        spacing: 5
+
+        Button:
+            text: "Home"
+            on_press:
+                app.root.current = self.text
+
+        BoxLayout:
+            Label:
+                text: "Debug mode"
+            MyToggleButton:
+                text: "OFF"
+                text_down: "ON"
+                text_normal: "OFF"
+                on_state: app.dev = True if args[1] == "down" else False
+
+        BoxLayout:
+            Label:
+                text: "Доверительный интервал"
+            BoxLayout:
+                spacing: 5
+                ToggleButton:
+                    group: "interval"
+                    text: "90%"
+                    on_state: app.interval = 1 if args[1] == "down" else app.interval
+                ToggleButton:
+                    group: "interval"
+                    text: "95%"
+                    state: "down"
+                    on_state: app.interval = 2 if args[1] == "down" else app.interval
+                ToggleButton:
+                    group: "interval"
+                    text: "99%"
+                    on_state: app.interval = 3 if args[1] == "down" else app.interval

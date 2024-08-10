@@ -1,0 +1,13 @@
+<Screen12@Screen>:
+    name: "Косвенные измерения guide"
+    BoxLayout:
+        orientation: "vertical"
+        padding: (50, 20)
+        spacing: 5
+        Button:
+            text: "Назад"
+            size_hint: (1, 0.2)
+            on_press:
+                app.root.current = app.last
+        MyLabel:
+            text: "Косвенные измерения - дельта значение от формулы.\n\nФормула - использует библиотеку sympy, поэтому пишите формулу по стандарту python и этой библиотеки.\nНапример: 'log(piu, g*5) + FG**2'.\n\nЗначения - список переменных через пробел которые имеют погрешность.\nНапример: 'piu g FG'.\n\nРезультат - погрешность формулы."
