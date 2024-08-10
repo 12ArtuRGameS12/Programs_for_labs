@@ -10,4 +10,4 @@
             on_press:
                 app.root.current = app.last
         MyLabel:
-            text: "Статистика - промежуточные вычисления.\n\nx и y - экспериментальные данные через пробел.\nНапример: '1.1 1.2 1.0' или '1,1 1,2 1,0.'\n\nРезультат - \n nX = количество элементов \n sumX = сумма X \n srX = sumX / nX \n XX = Xi - srX \n sumXX = сумма (Xi - srX) \n XX2 = (Xi - srX) ** 2 \n sumXX2 = сумма (Xi - srX) ** 2 \n s0X = (sumXX2 / {nX * [nX - 1]}) ** (1/2) \n X2 = Xi ** 2 \n sumX2 = сумма Xi ** 2 \n XY = Xi * Yi \n sumXY = сумма Xi * Yi \n XXYY = (Xi - srX) * (Yi - srY) \n sumXXYY = сумма (Xi - srX) * (Yi - srY)"
+            text: open("program/text/Статистика guide.txt", encoding="utf-8").read()
