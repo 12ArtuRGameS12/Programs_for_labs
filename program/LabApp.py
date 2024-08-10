@@ -2,6 +2,7 @@
 # traceback.format_exc()
 
 from kivy.app import App
+from kivymd.app import MDApp
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -83,7 +84,7 @@ def clear(a):
     return [lb.convert2number(i) for i in lb.clr_sp(a).split()]
 
 
-class MyApp(App):
+class MyApp(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -93,6 +94,7 @@ class MyApp(App):
         self.cc1 = 1
 
     def build(self):
+        self.theme_cls.theme_style = "Dark"
         Window.bind(on_keyboard=self.Android_back_click)
 
     def Android_back_click(self, window, key, *largs):
