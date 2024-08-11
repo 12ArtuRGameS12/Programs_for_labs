@@ -1,14 +1,16 @@
-#:include program/components/screen_home.kv
-#:include program/components/screen_settings.kv
-#:include program/components/screen3.kv
-#:include program/components/screen5.kv
-#:include program/components/screen7.kv
-#:include program/components/screen9.kv
-#:include program/components/screen11.kv
-#:include program/components/screen13.kv
-
 #:include program/components/my_buttons.kv
 #:include program/components/screen_guide.kv
+
+#:include program/components/screen_home.kv
+#:include program/components/screen_settings.kv
+
+#:include program/components/screen1.kv
+#:include program/components/screen2.kv
+#:include program/components/screen3.kv
+#:include program/components/screen4.kv
+#:include program/components/screen5.kv
+#:include program/components/screen6.kv
+
 
 <MyLabel@Label>:
     text_size: [None, None]
@@ -22,11 +24,12 @@ MDScreenManager:
 
     ScreenHome:
     ScreenSettings:
+
+    Screen1:
+    Screen2:
     Screen3:
+    Screen4:
     Screen5:
-    Screen7:
-    Screen9:
-    Screen11:
-    Screen13:
+    Screen6:
 
     ScreenGuide:

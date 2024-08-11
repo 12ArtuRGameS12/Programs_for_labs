@@ -1,5 +1,6 @@
-<Screen5@Screen>:
-    name: "МНК"
+<Screen5@MDScreen>:
+    name: "Косвенные измерения"
+
     BoxLayout:
         orientation: "vertical"
         padding: (50, 20)
@@ -8,34 +9,20 @@
         BoxLayout:
             ButtonBack:
             ButtonToGuide:
-                text: "МНК guide"
-        MyTextInput:
-            hint_text: "x"
-            filt: {*"0123456789., "}
-            id: id_mnk_0
-        MyTextInput:
-            hint_text: "y"
-            filt: {*"0123456789., "}
-            id: id_mnk_1
+                text: "Косвенные измерения guide"
 
-        GridLayout:
-            cols: 2
-            Label:
-                text: "y = ax + b"
-            Label:
-                text: "y = ax"
-            CheckBox:
-                group: "МНК"
-                active: True
-                on_active:
-                    app.cc1 = 1 if args[1] else app.cc1
-            CheckBox:
-                group: "МНК"
-                on_active:
-                    app.cc1 = 2 if args[1] else app.cc1
+        MyTextInput:
+            hint_text: "Формула"
+            id: id_cs_0
+
+        MyTextInput:
+            hint_text: "Значения"
+            id: id_cs_1
+
         MyTextInput2:
             hint_text: "Результат"
-            id: id_mnk_2
+            id: id_cs_2
+
         Button:
             text: "calc"
-            on_press: app.calc2((id_mnk_0.text, id_mnk_1.text), app.cc1, id_mnk_2)
+            on_press: app.calc5((id_cs_0.text, id_cs_1.text), id_cs_2)

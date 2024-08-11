@@ -1,5 +1,6 @@
-<Screen13@Screen>:
+<Screen6@MDScreen>:
     name: "Формулы exe"
+
     BoxLayout:
         orientation: "vertical"
         padding: (50, 20)
@@ -9,15 +10,19 @@
             ButtonBack:
             ButtonToGuide:
                 text: "Формулы exe guide"
+
         MyTextInput:
             hint_text: "Формула"
             id: id_fe_0
+
         MyTextInput:
             hint_text: "Значения"
             id: id_fe_1
+
         MyTextInput2:
             hint_text: "Результат"
             id: id_fe_2
+
         Button:
             text: "calc"
             on_press: app.calc6((id_fe_0.text, id_fe_1.text), id_fe_2)

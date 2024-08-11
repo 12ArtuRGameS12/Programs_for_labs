@@ -1,25 +1,30 @@
-<Screen3@Screen>:
-    name: "Прямые измерения"
+<Screen3@MDScreen>:
+    name: "Неравноточные измерения"
+
     BoxLayout:
         orientation: "vertical"
         padding: (50, 20)
         spacing: 5
+
         BoxLayout:
             ButtonBack:
             ButtonToGuide:
-                text: "Прямые измерения guide"
+                text: "Неравноточные измерения guide"
 
         MyTextInput:
-            hint_text: "Данные"
+            hint_text: "Среднее значения"
             filt: {*"0123456789., "}
-            id: id_pz_0
+            id: id_nr_0
+
         MyTextInput:
-            hint_text: "Точность прибора"
-            filt: {*"0123456789.,"}
-            id: id_pz_1
+            hint_text: "Погрешность значений"
+            filt: {*"0123456789., "}
+            id: id_nr_1
+
         MyTextInput2:
             hint_text: "Результат"
-            id: id_pz_2
+            id: id_nr_2
+
         Button:
             text: "calc"
-            on_press: app.calc1((id_pz_0.text, id_pz_1.text), id_pz_2)
+            on_press: app.calc3((id_nr_0.text, id_nr_1.text), id_nr_2)
