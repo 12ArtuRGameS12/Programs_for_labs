@@ -31,4 +31,53 @@
         text: root.text
 
 
+<UpBar@MDTopAppBar>:
+    type: "small"
+    text: ""
+
+    MDTopAppBarLeadingButtonContainer:
+
+        MDActionTopAppBarButton:
+            icon: "arrow-left"
+            on_release:
+                app.root.transition.direction = "right"
+                app.root.current = app.last_screen.pop()
+
+    MDTopAppBarTitle:
+        text: root.text
+        pos_hint: {"center_x": .5}
+
+
+<UpBarWithGuide@UpBar>:
+    text_guide: self.text + " guide"
+
+    MDTopAppBarTrailingButtonContainer:
+
+        MDActionTopAppBarButton:
+            icon: "tooltip-question"
+            on_release:
+                app.root.transition.direction = "left"
+                app.last_screen.append(app.root.current)
+                app.root.get_screen("guide screen").text = root.text_guide
+                app.root.current = "guide screen"
+
+
+<BoxLayoutPreset@MDBoxLayout>:
+    orientation: "vertical"
+    padding: (50, 20)
+    spacing: 5
+    text: root.parent.name
+
+    UpBar:
+        text: root.text
+
+
+<BoxLayoutPresetWithGuide@MDBoxLayout>:
+    orientation: "vertical"
+    padding: (50, 20)
+    spacing: 5
+    text: root.parent.name
+
+    UpBarWithGuide:
+        text: root.text
 

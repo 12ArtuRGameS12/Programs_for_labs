@@ -2,13 +2,8 @@
     name: "guide screen"
     text: ""
 
-    BoxLayout:
-        orientation: "vertical"
-        padding: (50, 20)
-        spacing: 5
-
-        ButtonBack:
-            size_hint: (1, 0.2)
+    BoxLayoutPreset:
+        text: root.text
 
         MyLabel:
             text: open("program/text/{}.txt".format(root.text), encoding="utf-8").read() if root.text else ""
