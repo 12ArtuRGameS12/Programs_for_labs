@@ -9,3 +9,10 @@
         app.root.transition.direction = "left"
         app.last_screen.append(app.root.current)
         app.root.current = self.text
+
+<ButtonToGuide@Button>:
+    on_press:
+        app.root.transition.direction = "left"
+        app.last_screen.append(app.root.current)
+        app.root.get_screen("guide screen").text = self.text
+        app.root.current = "guide screen"
