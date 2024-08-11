@@ -1,23 +1,34 @@
 <ButtonBack@Button>:
     text: "Назад"
-    on_press:
+    on_release:
         app.root.transition.direction = "right"
         app.root.current = app.last_screen.pop()
 
 
 <ButtonForward@Button>:
-    on_press:
+    on_release:
         app.root.transition.direction = "left"
         app.last_screen.append(app.root.current)
         app.root.current = self.text
 
 
 <ButtonToGuide@Button>:
-    on_press:
+    on_release:
         app.root.transition.direction = "left"
         app.last_screen.append(app.root.current)
         app.root.get_screen("guide screen").text = self.text
         app.root.current = "guide screen"
+
+
+<ButtonForwardList@MDListItem>:
+    text: ""
+    on_release:
+        app.root.transition.direction = "left"
+        app.last_screen.append(app.root.current)
+        app.root.current = self.text
+
+    MDListItemHeadlineText:
+        text: root.text
 
 
 

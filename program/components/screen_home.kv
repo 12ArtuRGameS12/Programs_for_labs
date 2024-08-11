@@ -1,22 +1,26 @@
 <ScreenHome@MDScreen>:
     name: "Home"
 
-    BoxLayout:
-        orientation: "vertical"
-        padding: (50, 20)
-        spacing: 5
+    MDScrollView:
+        do_scroll_x: False
 
-        ButtonForward:
-            text: "Настройки"
-        ButtonForward:
-            text: "Прямые измерения"
-        ButtonForward:
-            text: "МНК"
-        ButtonForward:
-            text: "Неравноточные измерения"
-        ButtonForward:
-            text: "Статистика"
-        ButtonForward:
-            text: "Косвенные измерения"
-        ButtonForward:
-            text: "Формулы exe"
+        MDBoxLayout:
+            adaptive_height: True
+            orientation: "vertical"
+            padding: (50, 20)
+            spacing: 5
+
+            ButtonForwardList:
+                text: "Настройки"
+            ButtonForwardList:
+                text: "Прямые измерения"
+            ButtonForwardList:
+                text: "МНК"
+            ButtonForwardList:
+                text: "Неравноточные измерения"
+            ButtonForwardList:
+                text: "Статистика"
+            ButtonForwardList:
+                text: "Косвенные измерения"
+            ButtonForwardList:
+                text: "Формулы exe"
