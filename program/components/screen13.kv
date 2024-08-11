@@ -6,15 +6,9 @@
         spacing: 5
 
         BoxLayout:
-            Button:
-                text: "Home"
-                on_press:
-                    root.manager.current = self.text
-            Button:
+            ButtonBack:
+            ButtonForward:
                 text: "Формулы exe guide"
-                on_press:
-                    app.last = self.parent.parent.parent.name
-                    root.manager.current = self.text
         MyTextInput:
             hint_text: "Формула"
             id: id_fe_0

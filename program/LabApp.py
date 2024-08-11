@@ -14,6 +14,8 @@ from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 
+from kivy.properties import ListProperty
+
 import lib_lab as lb
 
 
@@ -85,6 +87,7 @@ def clear(a):
 
 
 class MyApp(MDApp):
+    last_screen = ListProperty()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

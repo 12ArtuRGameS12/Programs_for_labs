@@ -4,10 +4,7 @@
         orientation: "vertical"
         padding: (50, 20)
         spacing: 5
-        Button:
-            text: "Назад"
+        ButtonBack:
             size_hint: (1, 0.2)
-            on_press:
-                root.manager.current = app.last
         MyLabel:
             text: open("program/text/Статистика guide.txt", encoding="utf-8").read()

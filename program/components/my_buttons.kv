@@ -1,0 +1,11 @@
+<ButtonBack@Button>:
+    text: "Назад"
+    on_press:
+        app.root.transition.direction = "right"
+        app.root.current = app.last_screen.pop()
+
+<ButtonForward@Button>:
+    on_press:
+        app.root.transition.direction = "left"
+        app.last_screen.append(app.root.current)
+        app.root.current = self.text
