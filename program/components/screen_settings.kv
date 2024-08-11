@@ -3,9 +3,9 @@
 
     BoxLayoutPreset:
 
-        BoxLayout:
+        MDBoxLayout:
 
-            Label:
+            MDLabel:
                 text: "Debug mode"
 
             MyToggleButton:
@@ -14,12 +14,12 @@
                 text_normal: "OFF"
                 on_state: app.dev = True if args[1] == "down" else False
 
-        BoxLayout:
+        MDBoxLayout:
 
-            Label:
+            MDLabel:
                 text: "Доверительный интервал"
 
-            BoxLayout:
+            MDBoxLayout:
                 spacing: 5
 
                 ToggleButton:

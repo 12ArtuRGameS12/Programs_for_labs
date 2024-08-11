@@ -3,20 +3,32 @@
 
     BoxLayoutPresetWithGuide:
 
-        MyTextInput:
-            hint_text: "Среднее значения"
-            filt: {*"0123456789., "}
+        MDTextField:
             id: id_nr_0
 
-        MyTextInput:
-            hint_text: "Погрешность значений"
-            filt: {*"0123456789., "}
+            MDTextFieldHintText:
+                text: "Среднее значения"
+
+        MDTextField:
             id: id_nr_1
 
-        MyTextInput2:
-            hint_text: "Результат"
-            id: id_nr_2
+            MDTextFieldHintText:
+                text: "Погрешность значений"
 
-        Button:
-            text: "calc"
-            on_press: app.calc3((id_nr_0.text, id_nr_1.text), id_nr_2)
+        MDTextField:
+            id: id_nr_2
+            multiline: True
+            mode: "filled"
+
+            MDTextFieldHelperText:
+                mode: "persistent"
+                text: "Результат"
+
+        MDButton:
+            pos_hint: {"center_x": 0.5}
+            on_release: app.calc3((id_nr_0.text, id_nr_1.text), id_nr_2)
+
+            MDButtonText:
+                text: "calc"
+
+        MDWidget:

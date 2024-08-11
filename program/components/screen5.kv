@@ -3,18 +3,32 @@
 
     BoxLayoutPresetWithGuide:
 
-        MyTextInput:
-            hint_text: "Формула"
+        MDTextField:
             id: id_cs_0
 
-        MyTextInput:
-            hint_text: "Значения"
+            MDTextFieldHintText:
+                text: "Формула"
+
+        MDTextField:
             id: id_cs_1
 
-        MyTextInput2:
-            hint_text: "Результат"
-            id: id_cs_2
+            MDTextFieldHintText:
+                text: "Значения"
 
-        Button:
-            text: "calc"
-            on_press: app.calc5((id_cs_0.text, id_cs_1.text), id_cs_2)
+        MDTextField:
+            id: id_cs_2
+            multiline: True
+            mode: "filled"
+
+            MDTextFieldHelperText:
+                mode: "persistent"
+                text: "Результат"
+
+        MDButton:
+            pos_hint: {"center_x": 0.5}
+            on_release: app.calc5((id_cs_0.text, id_cs_1.text), id_cs_2)
+
+            MDButtonText:
+                text: "calc"
+
+        MDWidget:

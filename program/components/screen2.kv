@@ -3,38 +3,56 @@
 
     BoxLayoutPresetWithGuide:
 
-        MyTextInput:
-            hint_text: "x"
-            filt: {*"0123456789., "}
+        MDTextField:
             id: id_mnk_0
 
-        MyTextInput:
-            hint_text: "y"
-            filt: {*"0123456789., "}
+            MDTextFieldHintText:
+                text: "x"
+
+        MDTextField:
             id: id_mnk_1
 
-        GridLayout:
+            MDTextFieldHintText:
+                text: "y"
+
+        MDGridLayout:
             cols: 2
 
-            Label:
+            MDLabel:
+                halign: 'center'
                 text: "y = ax + b"
 
-            Label:
+            MDLabel:
+                halign: 'center'
                 text: "y = ax"
 
-            CheckBox:
-                group: "МНК"
-                active: True
-                on_active: app.cc1 = 1 if args[1] else app.cc1
+            MDAnchorLayout:
 
-            CheckBox:
-                group: "МНК"
-                on_active: app.cc1 = 2 if args[1] else app.cc1
+                MDCheckbox:
+                    group: "МНК"
+                    active: True
+                    on_active: app.cc1 = 1 if args[1] else app.cc1
 
-        MyTextInput2:
-            hint_text: "Результат"
+            MDAnchorLayout:
+
+                MDCheckbox:
+                    group: "МНК"
+                    on_active: app.cc1 = 2 if args[1] else app.cc1
+
+        MDTextField:
             id: id_mnk_2
+            multiline: True
+            mode: "filled"
 
-        Button:
-            text: "calc"
-            on_press: app.calc2((id_mnk_0.text, id_mnk_1.text), app.cc1, id_mnk_2)
+            MDTextFieldHelperText:
+                mode: "persistent"
+                text: "Результат"
+
+        MDButton:
+            pos_hint: {"center_x": 0.5}
+            on_release: app.calc2((id_mnk_0.text, id_mnk_1.text), app.cc1, id_mnk_2)
+
+            MDButtonText:
+                text: "calc"
+
+        MDWidget:

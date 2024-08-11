@@ -5,5 +5,10 @@
     BoxLayoutPreset:
         text: root.text
 
-        MyLabel:
+        MDLabel:
+            text_size: None, None
+            text_size: self.size
+            valign: "center"
+            halign: "center"
+
             text: open("program/text/{}.txt".format(root.text), encoding="utf-8").read() if root.text else ""

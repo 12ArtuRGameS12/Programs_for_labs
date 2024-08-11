@@ -3,20 +3,31 @@
 
     BoxLayoutPresetWithGuide:
 
-        MyTextInput:
-            hint_text: "x"
-            filt: {*"0123456789., "}
+        MDTextField:
             id: id_st_0
+            MDTextFieldHintText:
+                text: "x"
 
-        MyTextInput:
-            hint_text: "y"
-            filt: {*"0123456789., "}
+        MDTextField:
             id: id_st_1
 
-        MyTextInput2:
-            hint_text: "Результат"
-            id: id_st_2
+            MDTextFieldHintText:
+                text: "y"
 
-        Button:
-            text: "calc"
-            on_press: app.calc4((id_st_0.text, id_st_1.text), id_st_2)
+        MDTextField:
+            id: id_st_2
+            multiline: True
+            mode: "filled"
+
+            MDTextFieldHelperText:
+                mode: "persistent"
+                text: "Результат"
+
+        MDButton:
+            pos_hint: {"center_x": 0.5}
+            on_release: app.calc4((id_st_0.text, id_st_1.text), id_st_2)
+
+            MDButtonText:
+                text: "calc"
+
+        MDWidget:
