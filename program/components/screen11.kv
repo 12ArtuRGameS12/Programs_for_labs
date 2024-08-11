@@ -9,12 +9,12 @@
             Button:
                 text: "Home"
                 on_press:
-                    app.root.current = self.text
+                    root.manager.current = self.text
             Button:
                 text: "Косвенные измерения guide"
                 on_press:
                     app.last = self.parent.parent.parent.name
-                    app.root.current = self.text
+                    root.manager.current = self.text
         MyTextInput:
             hint_text: "Формула"
             id: id_cs_0

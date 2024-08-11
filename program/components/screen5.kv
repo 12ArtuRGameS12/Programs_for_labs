@@ -9,12 +9,12 @@
             Button:
                 text: "Home"
                 on_press:
-                    app.root.current = self.text
+                    root.manager.current = self.text
             Button:
                 text: "МНК guide"
                 on_press:
                     app.last = self.parent.parent.parent.name
-                    app.root.current = self.text
+                    root.manager.current = self.text
         MyTextInput:
             hint_text: "x"
             filt: {*"0123456789., "}

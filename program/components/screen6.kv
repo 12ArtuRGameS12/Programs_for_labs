@@ -8,6 +8,6 @@
             text: "Назад"
             size_hint: (1, 0.2)
             on_press:
-                app.root.current = app.last
+                root.manager.current = app.last
         MyLabel:
             text: open("program/text/МНК guide.txt", encoding="utf-8").read()

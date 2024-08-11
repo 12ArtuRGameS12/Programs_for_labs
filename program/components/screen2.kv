@@ -9,7 +9,8 @@
         Button:
             text: "Home"
             on_press:
-                app.root.current = self.text
+                root.manager.transition.direction = "right"
+                root.manager.current = self.text
 
         BoxLayout:
             Label:

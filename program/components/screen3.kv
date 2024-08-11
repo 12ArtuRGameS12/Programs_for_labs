@@ -8,12 +8,13 @@
             Button:
                 text: "Home"
                 on_press:
-                    app.root.current = self.text
+                    root.manager.current = self.text
             Button:
                 text: "Прямые измерения guide"
                 on_press:
                     app.last = self.parent.parent.parent.name
-                    app.root.current = self.text
+
+                    root.manager.current = self.text
 
         MyTextInput:
             hint_text: "Данные"
