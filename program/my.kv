@@ -1,17 +1,11 @@
-#:include program/components/screen1.kv
-#:include program/components/screen2.kv
+#:include program/components/screen_home.kv
+#:include program/components/screen_settings.kv
 #:include program/components/screen3.kv
-#:include program/components/screen4.kv
 #:include program/components/screen5.kv
-#:include program/components/screen6.kv
 #:include program/components/screen7.kv
-#:include program/components/screen8.kv
 #:include program/components/screen9.kv
-#:include program/components/screen10.kv
 #:include program/components/screen11.kv
-#:include program/components/screen12.kv
 #:include program/components/screen13.kv
-#:include program/components/screen14.kv
 
 #:include program/components/my_buttons.kv
 #:include program/components/screen_guide.kv
@@ -26,19 +20,13 @@
 MDScreenManager:
     md_bg_color: app.theme_cls.backgroundColor
 
-    Screen1:
-    Screen2:
+    ScreenHome:
+    ScreenSettings:
     Screen3:
-    Screen4:
     Screen5:
-    Screen6:
     Screen7:
-    Screen8:
     Screen9:
-    Screen10:
     Screen11:
-    Screen12:
     Screen13:
-    Screen14:
 
     ScreenGuide:
