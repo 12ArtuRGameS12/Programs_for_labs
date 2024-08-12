@@ -15,9 +15,36 @@ from kivy.uix.popup import Popup
 from kivy.clock import Clock
 
 from kivy.properties import ListProperty
+from kivy.properties import StringProperty
 from kivymd.uix.list.list import MDListItem
+from kivymd.uix.screen import MDScreen
 
 import lib_lab as lb
+
+
+class ScreenGuide(MDScreen):
+    text = StringProperty()
+
+    def on_text(self, *args):
+        a = ""
+        match self.text:
+            case "Прямые измерения":
+                a = "1"
+            case "МНК":
+                a = "2"
+            case "Неравноточные измерения":
+                a = "3"
+            case "Статистика":
+                a = "4"
+            case "Косвенные измерения":
+                a = "5"
+            case "Формулы exe":
+                a = "6"
+            case _:
+                a = ""
+        print(a)
+        self.ids["my"].text = open(f"program/text/guide{a}.txt", encoding="utf-8").read()\
+            if a else ""
 
 
 class TextInputFixed(TextInput):

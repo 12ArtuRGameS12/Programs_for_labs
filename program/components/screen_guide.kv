@@ -1,4 +1,4 @@
-<ScreenGuide@MDScreen>:
+<ScreenGuide>:
     name: "guide screen"
     text: ""
 
@@ -6,9 +6,8 @@
         text: root.text
 
         MDLabel:
+            id: my
             text_size: None, None
             text_size: self.size
             valign: "center"
             halign: "center"
-
-            text: open("program/text/{}.txt".format(root.text), encoding="utf-8").read() if root.text else ""
