@@ -4,36 +4,55 @@
     BoxLayoutPreset:
 
         MDBoxLayout:
+            adaptive_height: True
 
             MDLabel:
-                text: "Debug mode"
+                adaptive_width: True
+                text: "Режим разработчика: "
 
-            MyToggleButton:
-                text: "OFF"
-                text_down: "ON"
-                text_normal: "OFF"
-                on_state: app.dev = True if args[1] == "down" else False
+            NormalChip:
+                type: "filter"
+                on_active: app.dev = args[1]
+
+                MDChipText:
+                    text: "Debug mode"
+
+            MDWidget:
 
         MDBoxLayout:
+            adaptive_height: True
 
             MDLabel:
-                text: "Доверительный интервал"
+                adaptive_width: True
+                text: "Доверительный интервал: "
 
-            MDBoxLayout:
-                spacing: 5
+            NormalChip:
+                type: "filter"
+                on_active:
+                    app.interval = 1 if args[1] else app.interval
+                    if args[1]: self.uncheck_chip()
 
-                ToggleButton:
-                    group: "interval"
+                MDChipText:
                     text: "90%"
-                    on_state: app.interval = 1 if args[1] == "down" else app.interval
 
-                ToggleButton:
-                    group: "interval"
+            NormalChip:
+                type: "filter"
+                active: True
+                on_active:
+                    app.interval = 2 if args[1] else app.interval
+                    if args[1]: self.uncheck_chip()
+
+                MDChipText:
                     text: "95%"
-                    state: "down"
-                    on_state: app.interval = 2 if args[1] == "down" else app.interval
 
-                ToggleButton:
-                    group: "interval"
+            NormalChip:
+                type: "filter"
+                on_active:
+                    app.interval = 3 if args[1] else app.interval
+                    if args[1]: self.uncheck_chip()
+
+                MDChipText:
                     text: "99%"
-                    on_state: app.interval = 3 if args[1] == "down" else app.interval
+            MDWidget:
+
+        MDWidget:

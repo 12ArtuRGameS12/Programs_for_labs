@@ -2,17 +2,34 @@ from kivymd.app import MDApp
 
 from kivy.properties import ListProperty, StringProperty, BooleanProperty, NumericProperty
 
-from kivy.uix.togglebutton import ToggleButton
 from kivymd.uix.list.list import MDListItem
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.chip.chip import MDChip
 
 import lib_lab as lb
+
+
+class NormalChip(MDChip):
+    def on_long_touch(self, *args) -> None:
+        pass
+
+    def on_press(self, *args) -> None:
+        self.active = not self.active
+        self._on_press(args)
+
+    def uncheck_chip(self) -> None:
+        """Removes a mark from an already marked chip."""
+
+        for chip in self.parent.children:
+            if chip is self:
+                continue
+            chip.active = False
 
 
 class ScreenGuide(MDScreen):
     text = StringProperty()
 
-    def on_text(self, *args):
+    def on_text(self, *args) -> None:
         match self.text:
             case "Прямые измерения":
                 a = "1"
@@ -28,24 +45,8 @@ class ScreenGuide(MDScreen):
                 a = "6"
             case _:
                 a = ""
-        self.ids["my"].text = open(f"program/text/guide{a}.txt", encoding="utf-8").read()\
+        self.ids["my"].text = open(f"program/text/guide{a}.txt", encoding="utf-8").read() \
             if a else ""
-
-
-class MyToggleButton(ToggleButton):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.bind(state=self.chec_state)
-
-        self.text_down = self.text
-        self.text_normal = self.text
-        # self.chec_state(self, self.state)
-
-    def chec_state(self, _, value):
-        if value == "down":
-            self.text = self.text_down
-        else:
-            self.text = self.text_normal
 
 
 def clear(a):
