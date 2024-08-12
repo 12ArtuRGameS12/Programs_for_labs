@@ -1,21 +1,8 @@
-# import traceback
-# traceback.format_exc()
-
-from kivy.app import App
 from kivymd.app import MDApp
 
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.textinput import TextInput
+from kivy.properties import ListProperty, StringProperty, BooleanProperty, NumericProperty
+
 from kivy.uix.togglebutton import ToggleButton
-
-from kivy.core.window import Window
-from kivy.uix.popup import Popup
-from kivy.clock import Clock
-
-from kivy.properties import ListProperty
-from kivy.properties import StringProperty
 from kivymd.uix.list.list import MDListItem
 from kivymd.uix.screen import MDScreen
 
@@ -26,7 +13,6 @@ class ScreenGuide(MDScreen):
     text = StringProperty()
 
     def on_text(self, *args):
-        a = ""
         match self.text:
             case "Прямые измерения":
                 a = "1"
@@ -42,56 +28,8 @@ class ScreenGuide(MDScreen):
                 a = "6"
             case _:
                 a = ""
-        print(a)
         self.ids["my"].text = open(f"program/text/guide{a}.txt", encoding="utf-8").read()\
             if a else ""
-
-
-class TextInputFixed(TextInput):
-    def on_focus(self, instance, value, *args):
-        if value:
-            Clock.schedule_once(self.create_keyboard, .1)
-        else:
-            self.hide_keyboard()
-
-    def create_keyboard(self, *args):
-        self.show_keyboard()
-
-    def remove_focus_decorator(function):
-        def wrapper(self, touch):
-            if not self.collide_point(*touch.pos):
-                self.focus = False
-            function(self, touch)
-
-        return wrapper
-
-    @remove_focus_decorator
-    def on_touch_down(self, touch):
-        super().on_touch_down(touch)
-
-
-class MyTextInput(TextInputFixed):
-    input_type = "text"
-    keyboard_suggestions = True
-    keyboard_mode = 'managed'
-    filt = None
-
-    def insert_text(self, substring, from_undo=False):
-        if self.filt:
-            x = ""
-            for i in substring:
-                if i in self.filt:
-                    x += i
-            substring = x
-        return super().insert_text(substring, from_undo=from_undo)
-
-    def on_double_tap(self):
-        self._select_word(delimiters=u' :;!?\'"<>()[]{}')
-
-
-class MyTextInput2(MyTextInput):
-    def create_keyboard(self, *args):
-        pass
 
 
 class MyToggleButton(ToggleButton):
@@ -116,47 +54,12 @@ def clear(a):
 
 class MyApp(MDApp):
     last_screen = ListProperty()
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.dev = False
-        self.interval = 2
-        self.last = "Home"
-        self.cc1 = 1
+    dev = BooleanProperty(False)
+    interval = NumericProperty(2)
+    cc1 = NumericProperty(1)
 
     def build(self):
         self.theme_cls.theme_style = "Dark"
-        Window.bind(on_keyboard=self.Android_back_click)
-
-    def Android_back_click(self, window, key, *largs):
-        if key == 27:
-            self.on_request_close()
-            return True
-
-    def on_request_close(self, *args, **kargs):
-        self.textpopup(title='Exit', text='Are you sure?')
-        return True
-
-    def textpopup(self, title='', text=''):
-        """Open the pop-up with the name.
-
-        :param title: title of the pop-up to open
-        :type title: str
-        :param text: main text of the pop-up to open
-        :type text: str
-        :rtype: None
-        """
-        box = BoxLayout(orientation='vertical')
-        box.add_widget(Label(text=text))
-        mybutton = Button(text='OK', size_hint=(1, 0.25))
-        box.add_widget(mybutton)
-        popup = Popup(title=title, content=box, size_hint=(.4, .4))
-        mybutton.bind(on_release=self.stop)
-        popup.open()
-
-    def test(self, *args, **kargs):
-        print(self, args, kargs)
-        for i in self.__dict__: print(i, self.__dict__[i])
 
     def calc1(self, text_input, output):
         try:
