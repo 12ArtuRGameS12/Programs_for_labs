@@ -1,0 +1,55 @@
+<Box@MDBoxLayout>:
+    adaptive_height: True
+    spacing: 20
+
+    MDButton:
+        pos_hint: {"center_x":0.5, "center_y": 0.5}
+    MDTextField:
+    MDTextField:
+
+
+<Box2@MDBoxLayout>:
+    orientation: "vertical"
+    adaptive_height: True
+
+    MDTextField:
+        mode: "filled"
+        adaptive_height: True
+    MDBoxLayout:
+        adaptive_height: True
+        MDTextField:
+        MDTextField:
+        MDTextField:
+    MDBoxLayout:
+        adaptive_height: True
+        MDTextField:
+        MDTextField:
+        MDTextField:
+    MDBoxLayout:
+        adaptive_height: True
+        MDTextField:
+        MDTextField:
+        MDTextField:
+
+
+<ScreenTest@MDScreen>:
+    name: "Test"
+
+    BoxLayoutPreset:
+        MDScrollView:
+            do_scroll_x: False
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True
+                padding: 20
+                spacing: 50
+
+                Box:
+                Box:
+                Box:
+                Box:
+
+                Box2:
+                Box2:
+                Box2:
+
