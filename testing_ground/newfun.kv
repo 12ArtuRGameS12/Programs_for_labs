@@ -1,0 +1,36 @@
+MDScreen:
+    md_bg_color: app.theme_cls.backgroundColor
+    container_box: box
+    title_name: "AppBar small"
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+
+            MDTopAppBarTitle:
+                text: root.title_name
+                pos_hint: {"center_x": 0.5}
+
+            MDTopAppBarTrailingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "pencil"
+
+        MDScrollView:
+
+            MDBoxLayout:
+                id: box
+                orientation: "vertical"
+                adaptive_height: True
+                spacing: 20
+                padding: 20
+
+
+
