@@ -5,10 +5,28 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.properties import ListProperty, StringProperty, BooleanProperty, NumericProperty, ObjectProperty
 from kivy.uix.button import Button
 from kivymd.uix.button import MDButton
+from kivymd.uix.textfield import MDTextField
 from kivy.lang.builder import Builder
 
 
+class BoxFormula(MDBoxLayout):
+    columns = NumericProperty(2)
+    rows = NumericProperty(1)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        for i in range(self.rows):
+            self.add_widget(Box(columns=self.columns))
+
+
 class Box(MDBoxLayout):
+    columns = NumericProperty(2)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        for i in range(self.columns):
+            self.add_widget(MDTextField())
+
     def get_data(self):
         if self.children:
             data = [i.text for i in self.children]
@@ -20,13 +38,12 @@ class ScreenStart(MDScreen):
     container_box = ObjectProperty()
     title_name = StringProperty()
 
-    def get_data(self, *args):
+    def get_data(self):
         data = []
         for i in self.container_box.children:
             if type(i) is Box:
                 data.append(i.get_data())
         data.reverse()
-        print(data)
         return data
 
 
@@ -40,17 +57,21 @@ class NewFun(MDApp):
         Builder.load_file("components.kv")
         self.root_widget = RootWidget()
         self.screen_start = ScreenStart(title_name="AppBar small")
-        self.root_widget.add_widget(self.screen_start)
 
     def build(self):
         self.theme_cls.theme_style = "Dark"
+        self.root_widget.add_widget(self.screen_start)
+        self.screen_start.container_box.add_widget(MDButton(on_release=self.test))
+
         for i in range(5):
-            self.screen_start.container_box.add_widget(Box())
-        d = MDButton()
-        d.bind(on_release=self.screen_start.get_data)
-        # d.size = (60, 60)
-        self.screen_start.container_box.add_widget(d)
+            self.screen_start.container_box.add_widget(Box(columns=3))
+
+        self.screen_start.container_box.add_widget(BoxFormula(columns=5, rows=3))
         return self.root_widget
+
+    def test(self, *args):
+        data = self.screen_start.get_data()
+        print(data)
 
 
 if __name__ == '__main__':
