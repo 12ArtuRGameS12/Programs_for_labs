@@ -30,7 +30,8 @@ class Box(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         for i in range(self.columns):
-            self.add_widget(MiniBox(on_release=self.remove_container))
+            mini_box = MiniBox(on_release=self.remove_container)
+            self.add_widget(mini_box)
 
     def get_data(self):
         if self.children:
@@ -43,13 +44,25 @@ class Box(MDBoxLayout):
 
 
 class MiniBox(MDBoxLayout):
+    hide_button = BooleanProperty(False)
+    saved_button = ObjectProperty()
+
     def __init__(self, **kwargs):
         self.register_event_type("on_release")
         super().__init__(**kwargs)
+
         self.ids["button"].bind(on_release=lambda _: self.dispatch("on_release"))
+        self.hide_button = True
 
     def on_release(self, *args):
         pass
+
+    def on_hide_button(self, object, bool_value, *args):
+        if bool_value and self.saved_button in self.children:
+            self.remove_widget(self.saved_button)
+
+        elif not bool_value and self.saved_button not in self.children:
+            self.add_widget(self.saved_button, 2)
 
 
 class ScreenStart(MDScreen):
