@@ -1,12 +1,17 @@
 from kivymd.app import MDApp
+from kivy.properties import ListProperty, StringProperty, BooleanProperty, NumericProperty, ObjectProperty
+from kivy.lang.builder import Builder
+
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
+
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivy.properties import ListProperty, StringProperty, BooleanProperty, NumericProperty, ObjectProperty
-from kivy.uix.button import Button
+from kivymd.uix.anchorlayout import MDAnchorLayout
+
 from kivymd.uix.button import MDButton
 from kivymd.uix.textfield import MDTextField
-from kivy.lang.builder import Builder
+
+from kivy.uix.button import Button
 
 
 class BoxFormula(MDBoxLayout):
@@ -25,13 +30,26 @@ class Box(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         for i in range(self.columns):
-            self.add_widget(MDTextField())
+            self.add_widget(MiniBox(on_release=self.remove_container))
 
     def get_data(self):
         if self.children:
             data = [i.text for i in self.children]
             data.reverse()
             return data
+
+    def remove_container(self, container, *args):
+        self.remove_widget(container)
+
+
+class MiniBox(MDBoxLayout):
+    def __init__(self, **kwargs):
+        self.register_event_type("on_release")
+        super().__init__(**kwargs)
+        self.ids["button"].bind(on_release=lambda _: self.dispatch("on_release"))
+
+    def on_release(self, *args):
+        pass
 
 
 class ScreenStart(MDScreen):
