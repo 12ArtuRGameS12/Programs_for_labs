@@ -8,8 +8,9 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.anchorlayout import MDAnchorLayout
 
-from kivymd.uix.button import MDButton
+from kivymd.uix.button import MDButton, MDButtonText, MDIconButton
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.widget import MDWidget
 
 from kivy.uix.button import Button
 
@@ -31,8 +32,9 @@ class Box(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.saved_button = MDButton()
-        self.saved_button.bind(on_release=self.add_container)
+        button = MDIconButton(icon="plus")
+        button.bind(on_release=self.add_container)
+        self.saved_button = button
 
         for i in range(self.columns):
             self.add_container()
@@ -44,7 +46,9 @@ class Box(MDBoxLayout):
             return data
 
     def remove_container(self, container, *_):
+        index = self.children.index(container)
         self.remove_widget(container)
+        return index
 
     def add_container(self, *_):
         mini_box = MiniBox(on_release=self.remove_container)
@@ -83,9 +87,12 @@ class MiniBox(MDBoxLayout):
     def on_hide_button(self, _object, bool_value, *_):
         if bool_value and self.saved_button in self.children:
             self.remove_widget(self.saved_button)
-
+            # self.padding = (0, 0)
+            # self.spacing = 0
         elif not bool_value and self.saved_button not in self.children:
             self.add_widget(self.saved_button, 2)
+            # self.padding = (0, 5)
+            # self.spacing = 30
 
     def get_data(self):
         return self.ids["text_field"].text
@@ -118,17 +125,23 @@ class NewFun(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.root_widget.add_widget(self.screen_start)
-        self.screen_start.container_box.add_widget(MDButton(on_release=self.test))
+        self.screen_start.container_box.add_widget(MDButton(MDButtonText(text="get_data"), on_release=self.test))
+        self.screen_start.container_box.add_widget(MDButton(MDButtonText(text="edit"), on_release=self.test2))
 
         for i in range(5):
             self.screen_start.container_box.add_widget(Box(columns=3))
 
-        self.screen_start.container_box.add_widget(BoxFormula(columns=5, rows=3))
+        # self.screen_start.container_box.add_widget(BoxFormula(columns=5, rows=3))
         return self.root_widget
 
     def test(self, *args):
         data = self.screen_start.get_data()
         print(data)
+
+    def test2(self, *args):
+        for i in self.screen_start.container_box.children:
+            if type(i) is Box:
+                i.hide_button = not i.hide_button
 
 
 if __name__ == '__main__':
