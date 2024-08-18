@@ -35,11 +35,11 @@ class Box(MDBoxLayout):
 
     def get_data(self):
         if self.children:
-            data = [i.text for i in self.children]
+            data = [i.get_data() for i in self.children]
             data.reverse()
             return data
 
-    def remove_container(self, container, *args):
+    def remove_container(self, container, *_):
         self.remove_widget(container)
 
 
@@ -57,12 +57,15 @@ class MiniBox(MDBoxLayout):
     def on_release(self, *args):
         pass
 
-    def on_hide_button(self, object, bool_value, *args):
+    def on_hide_button(self, _object, bool_value, *_):
         if bool_value and self.saved_button in self.children:
             self.remove_widget(self.saved_button)
 
         elif not bool_value and self.saved_button not in self.children:
             self.add_widget(self.saved_button, 2)
+
+    def get_data(self):
+        return self.ids["text_field"].text
 
 
 class ScreenStart(MDScreen):
