@@ -26,21 +26,44 @@ class BoxFormula(MDBoxLayout):
 
 class Box(MDBoxLayout):
     columns = NumericProperty(2)
+    hide_button = BooleanProperty(True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.saved_button = MDButton()
+        self.saved_button.bind(on_release=self.add_container)
+
         for i in range(self.columns):
-            mini_box = MiniBox(on_release=self.remove_container)
-            self.add_widget(mini_box)
+            self.add_container()
 
     def get_data(self):
         if self.children:
-            data = [i.get_data() for i in self.children]
+            data = [i.get_data() for i in self.children if type(i) is MiniBox]
             data.reverse()
             return data
 
     def remove_container(self, container, *_):
         self.remove_widget(container)
+
+    def add_container(self, *_):
+        mini_box = MiniBox(on_release=self.remove_container)
+        mini_box.hide_button = self.hide_button
+        self.add_widget(mini_box)
+
+        if not self.hide_button and self.saved_button in self.children:
+            self.remove_widget(self.saved_button)
+            self.add_widget(self.saved_button)
+
+    def on_hide_button(self, _object, bool_value, *_):
+        for i in self.children:
+            i.hide_button = bool_value
+
+        if bool_value and self.saved_button in self.children:
+            self.remove_widget(self.saved_button)
+
+        elif not bool_value and self.saved_button not in self.children:
+            self.add_widget(self.saved_button)
 
 
 class MiniBox(MDBoxLayout):
